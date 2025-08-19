@@ -12,38 +12,20 @@
   ],
   "routes": [
     {
-      "src": "/static/(.*)",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
-  "env": {
-    "REACT_APP_NAME": "@react_app_name",
-    "REACT_APP_VERSION": "@react_app_version",
-    "REACT_APP_ENVIRONMENT": "@react_app_environment"
-  },
-  "build": {
-    "env": {
-      "REACT_APP_SUPABASE_URL": "@react_app_supabase_url",
-      "REACT_APP_SUPABASE_ANON_KEY": "@react_app_supabase_anon_key",
-      "REACT_APP_EMAILJS_SERVICE_ID": "@react_app_emailjs_service_id",
-      "REACT_APP_EMAILJS_TEMPLATE_ID_ESTIMATE": "@react_app_emailjs_template_id_estimate",
-      "REACT_APP_EMAILJS_TEMPLATE_ID_PREORDER": "@react_app_emailjs_template_id_preorder",
-      "REACT_APP_EMAILJS_PUBLIC_KEY": "@react_app_emailjs_public_key",
-      "REACT_APP_COMPANY_NAME": "@react_app_company_name",
-      "REACT_APP_COMPANY_EMAIL": "@react_app_company_email",
-      "REACT_APP_COMPANY_PHONE": "@react_app_company_phone",
-      "REACT_APP_COMPANY_ADDRESS": "@react_app_company_address",
-      "REACT_APP_COMPANY_SIRET": "@react_app_company_siret",
-      "REACT_APP_COMPANY_TVA": "@react_app_company_tva"
-    }
-  },
   "headers": [
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
