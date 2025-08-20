@@ -42,13 +42,14 @@ else
     exit 1
 fi
 
-# Déploiement sur Vercel (si vercel CLI est installé)
-if command -v vercel &> /dev/null; then
-    echo "🌐 Déploiement sur Vercel..."
-    vercel --prod
-else
-    echo "⚠️ Vercel CLI non installé. Installez avec: npm i -g vercel"
-    echo "📁 Fichiers prêts pour le déploiement dans le dossier 'build/'"
-fi
+# Supprimer tout ce bloc :
+# # Déploiement sur Vercel (si vercel CLI est installé)
+# if command -v vercel &> /dev/null; then
+#     echo "🌐 Déploiement sur Vercel..."
+#     vercel --prod
+# else
+#     echo "⚠️ Vercel CLI non installé. Installez avec: npm i -g vercel"
+#     echo "📁 Fichiers prêts pour le déploiement dans le dossier 'build/'"
+# fi
 
-echo "✅ Déploiement terminé!"
+echo "✅ Build terminé!"

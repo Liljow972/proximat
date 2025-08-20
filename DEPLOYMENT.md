@@ -12,8 +12,8 @@
 
 ### 1. Supabase
 ```bash
-REACT_APP_SUPABASE_URL=https://your-project.supabase.co
-REACT_APP_SUPABASE_ANON_KEY=your-anon-key
+REACT_APP_SUPABASE_URL=https://tqlfmjjh1lvlmttcauaa.supabase.co
+REACT_APP_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRnbGZtamloaWl2aW1pdGNhdWFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3MDk0NTMsImV4cCI6MjA3MTI4NTQ1M30.NYGpyXarb_ZoMZI1_iSzfra6HbA_2D_w8EDLOXEJLBU
 ```
 
 ### 2. EmailJS
@@ -54,15 +54,9 @@ npm run test:coverage
 # Build
 npm run build
 
-# Déploiement
-vercel --prod
-```
 
-## Configuration Vercel
 
-1. **Connecter le repository GitHub**
-2. **Configurer les variables d'environnement** dans le dashboard Vercel
-3. **Activer les déploiements automatiques**
+
 
 ## Post-déploiement
 
@@ -73,7 +67,6 @@ vercel --prod
 
 ## Monitoring
 
-- **Vercel Analytics**: Performances et usage
 - **Supabase Dashboard**: Base de données et API
 - **EmailJS Dashboard**: Envoi d'emails
 - **Google Analytics**: Comportement utilisateur
