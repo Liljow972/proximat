@@ -58,7 +58,7 @@ const materials = [
     category: 'granulaire', 
     unit_m3: 'm³', 
     unit_seau: 'seau',
-    price_m3: 45, 
+    price_m3: 53.60, 
     price_seau: 2.5
   },
   { 
@@ -67,7 +67,7 @@ const materials = [
     category: 'granulaire', 
     unit_m3: 'm³', 
     unit_seau: 'seau',
-    price_m3: 55, 
+    price_m3: 68.00, 
     price_seau: 3.0 
   },
   { 
@@ -76,16 +76,16 @@ const materials = [
     category: 'granulaire', 
     unit_m3: 'm³', 
     unit_seau: 'seau',
-    price_m3: 60, 
+    price_m3: 58.90, 
     price_seau: 3.2 
   },
   { 
     id: 4, 
-    name: 'Gravillon', 
+    name: 'Gravillon 4/12', 
     category: 'granulaire', 
     unit_m3: 'm³', 
     unit_seau: 'seau',
-    price_m3: 65, 
+    price_m3: 69.98, 
     price_seau: 3.5 
   },
   { 
@@ -103,7 +103,7 @@ const materials = [
     category: 'granulaire', 
     unit_m3: 'm³', 
     unit_seau: 'seau',
-    price_m3: 75, 
+    price_m3: 60.00, 
     price_seau: 4.0 
   },
   { 
@@ -112,7 +112,7 @@ const materials = [
     category: 'granulaire', 
     unit_m3: 'm³', 
     unit_seau: 'seau',
-    price_m3: 70, 
+    price_m3: 60.00, 
     price_seau: 3.8 
   },
 
@@ -123,7 +123,7 @@ const materials = [
     category: 'ciment', 
     dosage_kg_m3: 350, 
     poids_sac_kg: 35, 
-    price_sac: 8.5 
+    price_sac: 8.30 
   },
   { 
     id: 9, 
@@ -131,7 +131,7 @@ const materials = [
     category: 'ciment', 
     dosage_kg_m3: 300, 
     poids_sac_kg: 35, 
-    price_sac: 12.0 
+    price_sac: 8.20 
   },
   { 
     id: 10, 
@@ -139,7 +139,7 @@ const materials = [
     category: 'ciment', 
     dosage_kg_m3: 400, 
     poids_sac_kg: 35, 
-    price_sac: 15.0 
+    price_sac: 14.75 
   },
   { 
     id: 11, 
@@ -147,7 +147,7 @@ const materials = [
     category: 'ciment', 
     dosage_kg_m3: 450, 
     poids_sac_kg: 35, 
-    price_sac: 18.0 
+    price_sac: 19.00 
   },
 
   // UNITAIRES
@@ -156,40 +156,47 @@ const materials = [
     name: 'Fer Ø6', 
     category: 'unitaire', 
     unit: 'kg', 
-    price_unit: 1.2 
+    price_unit: 3.90 
   },
   { 
     id: 13, 
     name: 'Fer Ø8', 
     category: 'unitaire', 
     unit: 'kg', 
-    price_unit: 1.3 
+    price_unit: 4.50 
   },
   { 
     id: 14, 
-    name: 'Parpaings 15x25x50', 
+    name: 'Fer Ø10', 
     category: 'unitaire', 
-    unit: 'pièce', 
-    price_unit: 2.1 
+    unit: 'kg', 
+    price_unit: 6.95 
   },
   { 
     id: 15, 
-    name: 'Parpaings 10x25x50', 
+    name: 'Parpaings 15x25x50', 
     category: 'unitaire', 
     unit: 'pièce', 
-    price_unit: 1.8 
+    price_unit: 2.90 
   },
   { 
     id: 16, 
+    name: 'Parpaings 10x25x50', 
+    category: 'unitaire', 
+    unit: 'pièce', 
+    price_unit: 2.29 
+  },
+  { 
+    id: 17, 
     name: 'Bloc à bancher 21x25x50', 
     category: 'unitaire', 
     unit: 'pièce', 
-    price_unit: 3.2 
+    price_unit: 3.65 
   },
 
   // SUR COMMANDE
   { 
-    id: 17, 
+    id: 18, 
     name: 'Produits sur commande', 
     category: 'sur_commande', 
     unit: 'Sur demande', 
@@ -266,105 +273,158 @@ function EstimatorModule() {
     return Math.ceil(value * factor) / factor;
   };
 
-  const calculateEstimate = () => {
-    const { length, width, thickness, selectedMaterials } = formData;
+  const roundToHalfCubicMeter = (volume) => {
+  return Math.ceil(volume * 2) / 2; // Arrondit au demi m³ supérieur
+};
+
+const calculateCombinedSalesOptions = (volume_m3, material) => {
+  const options = [];
+  
+  // Option 1: Tout en m³ (arrondi au demi m³)
+  const volume_arrondi = roundToHalfCubicMeter(volume_m3);
+  options.push({
+    type: 'cubic_only',
+    description: `${volume_arrondi} m³`,
+    quantity_m3: volume_arrondi,
+    quantity_seaux: 0,
+    totalPrice: volume_arrondi * material.price_m3,
+    details: `${volume_arrondi} godet(s)`
+  });
+  
+  // Option 2: Combinaison godet + seaux (pour optimiser)
+  if (volume_m3 >= 0.5) {
+    const godets_entiers = Math.floor(volume_m3 / 0.5) * 0.5;
+    const volume_restant = volume_m3 - godets_entiers;
+    const seaux_necessaires = Math.ceil(volume_restant * 35); // ~35 seaux par m³
     
-    if (!length || !width || !thickness || selectedMaterials.length === 0) {
-      alert('Veuillez remplir tous les champs et sélectionner au moins un matériau.');
-      return;
+    if (seaux_necessaires > 0) {
+      options.push({
+        type: 'combined',
+        description: `${godets_entiers} m³ + ${seaux_necessaires} seaux`,
+        quantity_m3: godets_entiers,
+        quantity_seaux: seaux_necessaires,
+        totalPrice: (godets_entiers * material.price_m3) + (seaux_necessaires * material.price_seau),
+        details: `${godets_entiers / 0.5} godet(s) + ${seaux_necessaires} seau(x)`
+      });
     }
+  }
+  
+  // Option 3: Tout en seaux
+  const total_seaux = Math.ceil(volume_m3 * 35);
+  options.push({
+    type: 'buckets_only',
+    description: `${total_seaux} seaux`,
+    quantity_m3: 0,
+    quantity_seaux: total_seaux,
+    totalPrice: total_seaux * material.price_seau,
+    details: `${total_seaux} seau(x)`
+  });
+  
+  // Retourner l'option la plus économique par défaut
+  return options.sort((a, b) => a.totalPrice - b.totalPrice);
+};
 
-    if (parseFloat(length) <= 0 || parseFloat(width) <= 0 || parseFloat(thickness) <= 0) {
-      alert('Toutes les dimensions doivent être supérieures à 0.');
-      return;
-    }
+const calculateEstimate = () => {
+  const { length, width, thickness, selectedMaterials } = formData;
+  
+  if (!length || !width || !thickness || selectedMaterials.length === 0) {
+    alert('Veuillez remplir tous les champs et sélectionner au moins un matériau.');
+    return;
+  }
 
-    const longueur_m = parseFloat(length);
-    const largeur_m = parseFloat(width);
-    const epaisseur_cm = parseFloat(thickness);
-    
-    const surface_m2 = longueur_m * largeur_m;
-    const epaisseur_m = epaisseur_cm / 100;
-    const volume_m3 = surface_m2 * epaisseur_m;
+  if (parseFloat(length) <= 0 || parseFloat(width) <= 0 || parseFloat(thickness) <= 0) {
+    alert('Toutes les dimensions doivent être supérieures à 0.');
+    return;
+  }
 
-    const calculatedResults = selectedMaterials.map(material => {
-      const result = {
-        material,
-        calculationDetails: '',
-        displayUnit: '',
-        quantity: 0,
-        totalPrice: 0,
-        isManual: false,
-        isOnQuote: false,
-        bucketInfo: null,
-        cementInfo: null,
+  const longueur_m = parseFloat(length);
+  const largeur_m = parseFloat(width);
+  const epaisseur_cm = parseFloat(thickness);
+  
+  const surface_m2 = longueur_m * largeur_m;
+  const epaisseur_m = epaisseur_cm / 100;
+  const volume_m3 = surface_m2 * epaisseur_m;
+
+  const calculatedResults = selectedMaterials.map(material => {
+    const result = {
+      material,
+      calculationDetails: '',
+      displayUnit: '',
+      quantity: 0,
+      totalPrice: 0,
+      isManual: false,
+      isOnQuote: false,
+      bucketInfo: null,
+      cementInfo: null,
+      salesOptions: null, // Nouvelle propriété pour les options de vente
+    };
+
+    if (material.category === 'granulaire') {
+      // Calculer les options de vente combinée
+      const salesOptions = calculateCombinedSalesOptions(volume_m3, material);
+      const bestOption = salesOptions[0]; // Option la plus économique
+      
+      result.calculationDetails = `Volume calculé = ${volume_m3.toFixed(3)} m³`;
+      result.salesOptions = salesOptions;
+      
+      // Utiliser la meilleure option par défaut
+      result.quantity = bestOption.description;
+      result.displayUnit = 'option optimale';
+      result.totalPrice = bestOption.totalPrice;
+      
+      // Informations détaillées pour l'affichage
+      result.bucketInfo = {
+        volume_m3: volume_m3.toFixed(3),
+        bestOption: bestOption,
+        allOptions: salesOptions
       };
-
-      if (material.category === 'granulaire') {
-        result.calculationDetails = `Volume = ${surface_m2.toFixed(2)} m² × ${epaisseur_m.toFixed(3)} m = ${volume_m3.toFixed(3)} m³`;
-        
-        if (surface_m2 < 0.5) {
-          const nb_seaux = Math.ceil((surface_m2 / 0.5) * 35);
-          const nb_brouettes = Math.floor(nb_seaux / 5);
-          
-          result.quantity = nb_seaux;
-          result.displayUnit = 'seaux';
-          result.totalPrice = nb_seaux * material.price_seau;
-          result.bucketInfo = { nb_seaux, nb_brouettes };
-        } else {
-          const volume_arrondi = roundUp(volume_m3, 2);
-          result.quantity = volume_arrondi;
-          result.displayUnit = 'm³';
-          result.totalPrice = volume_arrondi * material.price_m3;
-        }
-      } else if (material.category === 'ciment') {
-        const kg_totaux = volume_m3 * material.dosage_kg_m3;
-        const nb_sacs = Math.ceil(kg_totaux / material.poids_sac_kg);
-        
-        result.quantity = nb_sacs;
-        result.displayUnit = 'sacs';
-        result.totalPrice = nb_sacs * material.price_sac;
-        result.calculationDetails = `Dosage: ${material.dosage_kg_m3} kg/m³ × ${volume_m3.toFixed(3)} m³ = ${kg_totaux.toFixed(1)} kg`;
-        result.cementInfo = {
-          dosage_kg_m3: material.dosage_kg_m3,
-          kg_totaux: kg_totaux.toFixed(1),
-          poids_sac_kg: material.poids_sac_kg
-        };
-      } else if (material.category === 'unitaire') {
-        const manualQty = parseFloat(manualQuantities[material.id] || 0);
-        if (manualQty > 0) {
-          result.quantity = manualQty;
-          result.displayUnit = material.unit;
-          result.totalPrice = manualQty * material.price_unit;
-          result.isManual = true;
-        } else {
-          result.quantity = 0;
-          result.displayUnit = material.unit;
-          result.totalPrice = 0;
-          result.isManual = true;
-        }
-      } else if (material.category === 'sur_commande') {
-        result.isOnQuote = true;
-        result.displayUnit = 'Sur devis';
+      
+    } else if (material.category === 'ciment') {
+      const kg_totaux = volume_m3 * material.dosage_kg_m3;
+      const nb_sacs = Math.ceil(kg_totaux / material.poids_sac_kg);
+      
+      result.quantity = nb_sacs;
+      result.displayUnit = 'sacs';
+      result.totalPrice = nb_sacs * material.price_sac;
+      result.calculationDetails = `Dosage: ${material.dosage_kg_m3} kg/m³ × ${volume_m3.toFixed(3)} m³ = ${kg_totaux.toFixed(1)} kg`;
+      result.cementInfo = {
+        dosage_kg_m3: material.dosage_kg_m3,
+        kg_totaux: kg_totaux.toFixed(1),
+        poids_sac_kg: material.poids_sac_kg
+      };
+    } else if (material.category === 'unitaire') {
+      const manualQty = parseFloat(manualQuantities[material.id] || 0);
+      if (manualQty > 0) {
+        result.quantity = manualQty;
+        result.displayUnit = material.unit;
+        result.totalPrice = manualQty * material.price_unit;
+        result.isManual = true;
+      } else {
+        result.quantity = 0;
+        result.displayUnit = material.unit;
+        result.totalPrice = 0;
+        result.isManual = true;
       }
+    } else if (material.category === 'sur_commande') {
+      result.isOnQuote = true;
+      result.displayUnit = 'Sur devis';
+    }
 
-      return result;
-    });
+    return result;
+  });
 
-    const totalPrice = calculatedResults.reduce((sum, item) => sum + item.totalPrice, 0);
-    const hasManualItems = calculatedResults.some(item => item.isManual || item.isOnQuote);
-    const sellInBuckets = surface_m2 < 0.5;
+  const totalPrice = calculatedResults.reduce((sum, item) => sum + item.totalPrice, 0);
+  const hasManualItems = calculatedResults.some(item => item.isManual || item.isOnQuote);
 
-    setResults({
-      surface_m2: surface_m2.toFixed(2),
-      epaisseur_m: epaisseur_m.toFixed(3),
-      volume_m3: volume_m3.toFixed(3),
-      sellInBuckets,
-      items: calculatedResults,
-      totalPrice,
-      hasManualItems
-    });
-  };
+  setResults({
+    surface_m2: surface_m2.toFixed(2),
+    epaisseur_m: epaisseur_m.toFixed(3),
+    volume_m3: volume_m3.toFixed(3),
+    items: calculatedResults,
+    totalPrice,
+    hasManualItems
+  });
+};
 
   const resetForm = () => {
     setFormData({
@@ -407,15 +467,12 @@ function EstimatorModule() {
     
     try {
       const pdfService = new PDFService();
-      const pdf = pdfService.generateEstimatePDF(results, emailData);
+      pdfService.generateEstimatePDF(results, emailData);
       
-      // Génération du nom de fichier
-      const fileName = `devis-proximat-${Date.now()}.pdf`;
+      // Ouvrir dans un nouvel onglet
+      pdfService.openPDFInNewTab();
       
-      // Téléchargement du PDF
-      pdfService.downloadPDF(fileName);
-      
-      showNotification('PDF généré et téléchargé avec succès', 'success');
+      showNotification('PDF ouvert dans un nouvel onglet', 'success');
     } catch (error) {
       console.error('Erreur lors de la génération du PDF:', error);
       showNotification('Erreur lors de la génération du PDF', 'error');
@@ -438,9 +495,9 @@ function EstimatorModule() {
     setIsSendingEmail(true);
 
     try {
-      // Génération du PDF
+      // Génération du PDF SANS l'ouvrir
       const pdfService = new PDFService();
-      const pdf = pdfService.generateEstimatePDF(results, emailData);
+      pdfService.generateEstimatePDF(results, emailData);
       const pdfBlob = pdfService.getPDFBlob();
 
       // Envoi de l'email
@@ -859,7 +916,7 @@ function EstimatorModule() {
                     variant="outlined" 
                     sx={{ 
                       mb: 4,
-                      borderRadius: 3,
+                      borderRadius: 1.5,
                       border: '1px solid rgba(0, 0, 0, 0.06)',
                       '& .MuiTableHead-root': {
                         background: 'linear-gradient(135deg, #FF6B00 0%, #FF8533 100%)'
@@ -916,14 +973,24 @@ function EstimatorModule() {
                               </TableRow>
                             )}
                             
-                            {/* Informations seaux */}
-                            {item.bucketInfo && (
+                            {/* Options de vente pour les matériaux granulaires */}
+                            {item.salesOptions && (
                               <TableRow>
-                                <TableCell colSpan={4} sx={{ bgcolor: 'rgba(255, 193, 7, 0.1)', fontSize: '0.75rem', py: 1 }}>
-                                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    <WarningIcon sx={{ fontSize: 16, mr: 1, color: 'warning.main' }} />
-                                    {item.bucketInfo.nb_seaux} seaux (11L chacun) = {item.bucketInfo.nb_brouettes} brouette(s)
-                                  </Box>
+                                <TableCell colSpan={4} sx={{ p: 2 }}>
+                                  <Alert severity="info">
+                                    <Typography variant="subtitle2" gutterBottom>
+                                      Options de vente disponibles :
+                                    </Typography>
+                                    {item.salesOptions.map((option, index) => (
+                                      <Typography key={index} variant="body2" sx={{ mb: 1 }}>
+                                        <strong>{option.details}</strong> - {option.totalPrice.toFixed(2)} €
+                                        {index === 0 && <Chip size="small" label="Recommandé" color="primary" sx={{ ml: 1 }} />}
+                                      </Typography>
+                                    ))}
+                                    <Typography variant="caption" color="text.secondary">
+                                      * Option recommandée = la plus économique
+                                    </Typography>
+                                  </Alert>
                                 </TableCell>
                               </TableRow>
                             )}
@@ -959,7 +1026,7 @@ function EstimatorModule() {
                       severity="warning" 
                       sx={{ 
                         mb: 4,
-                        borderRadius: 3,
+                        borderRadius: 1.5,
                         '& .MuiAlert-icon': {
                           fontSize: 24
                         }

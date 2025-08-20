@@ -3,7 +3,6 @@ import {
   Box,
   Card,
   CardContent,
-  CardMedia,
   Typography,
   TextField,
   Button,
@@ -25,8 +24,9 @@ import {
   FilterList as FilterIcon,
   Visibility as VisibilityIcon,
 } from '@mui/icons-material';
+import ProductImage from './common/ProductImage';
 
-// Base de données des produits avec images par défaut
+// Base de données des produits avec images locales
 const products = [
   {
     id: 1,
@@ -35,7 +35,7 @@ const products = [
     price: 45,
     unit: 'm³',
     description: 'Mélange de sable et gravier pour remblais et fondations',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
+    image: '/assets/images/granulats/tout-venant.jpg',
     available: true,
   },
   {
@@ -45,7 +45,7 @@ const products = [
     price: 55,
     unit: 'm³',
     description: 'Sable fin spécialement sélectionné pour enduits et crépis',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
+    image: '/assets/images/sables/sable-enduit.jpg',
     available: true,
   },
   {
@@ -55,7 +55,7 @@ const products = [
     price: 60,
     unit: 'm³',
     description: 'Sable calibré pour la fabrication de béton de qualité',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
+    image: '/assets/images/sables/sable-beton.jpg',
     available: true,
   },
   {
@@ -65,77 +65,77 @@ const products = [
     price: 65,
     unit: 'm³',
     description: 'Gravillon concassé pour béton et drainage',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
+    image: '/assets/images/granulats/gravillon.jpg',
     available: true,
   },
   {
     id: 5,
-    name: 'Sable concassé',
-    category: 'Sables',
-    price: 58,
+    name: 'Gravier 5/15',
+    category: 'Granulats',
+    price: 70,
     unit: 'm³',
-    description: 'Sable concassé pour stabilisation et drainage',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
+    description: 'Gravier calibré 5-15mm pour béton et allées',
+    image: '/assets/images/granulats/gravier-5-15.jpg',
     available: true,
   },
   {
     id: 6,
-    name: 'Gravier pouzzolane',
+    name: 'Gravier 15/25',
     category: 'Granulats',
     price: 75,
     unit: 'm³',
-    description: 'Gravier volcanique léger pour isolation et drainage',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
+    description: 'Gravier calibré 15-25mm pour gros béton',
+    image: '/assets/images/granulats/gravier-15-25.jpg',
     available: true,
   },
   {
     id: 7,
-    name: 'Gravillon 0/31.5 (spécial chemins / emblais)',
-    category: 'Granulats',
-    price: 70,
+    name: 'Sable fin',
+    category: 'Sables',
+    price: 50,
     unit: 'm³',
-    description: 'Mélange spécial pour création de chemins et remblais',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
+    description: 'Sable fin pour mortier et jointoiement',
+    image: '/assets/images/sables/sable-fin.jpg',
     available: true,
   },
   {
     id: 8,
-    name: 'Ciment classique (sac de 35 kg)',
+    name: 'Ciment gris',
     category: 'Liants',
     price: 8.5,
-    unit: 'sac',
-    description: 'Ciment Portland CEM II 32.5 pour usage général',
-    image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=300&h=200&fit=crop',
+    unit: 'sac 35kg',
+    description: 'Ciment Portland gris CEM II 32.5',
+    image: '/assets/images/liants/ciment-gris.jpg',
     available: true,
   },
   {
     id: 9,
-    name: 'Cimabat',
+    name: 'Ciment blanc',
     category: 'Liants',
     price: 12,
-    unit: 'sac',
-    description: 'Ciment spécial pour travaux de maçonnerie',
-    image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=300&h=200&fit=crop',
+    unit: 'sac 35kg',
+    description: 'Ciment blanc pour enduits décoratifs',
+    image: '/assets/images/liants/ciment-blanc.jpg',
     available: true,
   },
   {
     id: 10,
-    name: 'Ciment Classic',
+    name: 'Chaux hydraulique',
     category: 'Liants',
-    price: 9,
-    unit: 'sac',
-    description: 'Ciment de qualité supérieure pour constructions durables',
-    image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=300&h=200&fit=crop',
+    price: 9.5,
+    unit: 'sac 35kg',
+    description: 'Chaux hydraulique NHL 3.5 pour enduits traditionnels',
+    image: '/assets/images/liants/chaux-hydraulique.jpg',
     available: true,
   },
   {
     id: 11,
-    name: 'Ciment colle avec résine',
+    name: 'Mortier colle',
     category: 'Liants',
     price: 15,
-    unit: 'sac',
-    description: 'Ciment colle haute performance avec résine',
-    image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=300&h=200&fit=crop',
+    unit: 'sac 25kg',
+    description: 'Mortier colle pour carrelage et faïence',
+    image: '/assets/images/liants/mortier-colle.jpg',
     available: true,
   },
   {
@@ -143,59 +143,89 @@ const products = [
     name: 'Fer Ø6',
     category: 'Ferraillage',
     price: 1.2,
-    unit: 'kg',
-    description: 'Barre de fer rond lisse diamètre 6mm',
-    image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=300&h=200&fit=crop',
+    unit: 'ml',
+    description: 'Barre de fer à béton diamètre 6mm',
+    image: '/assets/images/ferraillage/fer-6.jpg',
     available: true,
   },
   {
     id: 13,
     name: 'Fer Ø8',
     category: 'Ferraillage',
-    price: 1.3,
-    unit: 'kg',
-    description: 'Barre de fer rond lisse diamètre 8mm',
-    image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=300&h=200&fit=crop',
+    price: 1.8,
+    unit: 'ml',
+    description: 'Barre de fer à béton diamètre 8mm',
+    image: '/assets/images/ferraillage/fer-8.jpg',
     available: true,
   },
   {
     id: 14,
-    name: 'Parpaings 15x25x50',
-    category: 'Blocs',
-    price: 2.1,
-    unit: 'pièce',
-    description: 'Parpaing creux 15x25x50 cm pour cloisons',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop',
+    name: 'Fer Ø10',
+    category: 'Ferraillage',
+    price: 2.5,
+    unit: 'ml',
+    description: 'Barre de fer à béton diamètre 10mm',
+    image: '/assets/images/ferraillage/fer-10.jpg',
     available: true,
   },
   {
     id: 15,
+    name: 'Treillis soudé',
+    category: 'Ferraillage',
+    price: 25,
+    unit: 'm²',
+    description: 'Treillis soudé ST25 pour dalles',
+    image: '/assets/images/ferraillage/treillis-soude.jpg',
+    available: true,
+  },
+  {
+    id: 16,
+    name: 'Parpaings 20x25x50',
+    category: 'Blocs',
+    price: 2.5,
+    unit: 'pièce',
+    description: 'Parpaing creux 20x25x50 cm pour murs porteurs',
+    image: '/assets/images/blocs/parpaings-20.jpg',
+    available: true,
+  },
+  {
+    id: 17,
+    name: 'Parpaings 15x25x50',
+    category: 'Blocs',
+    price: 2.2,
+    unit: 'pièce',
+    description: 'Parpaing creux 15x25x50 cm pour cloisons',
+    image: '/assets/images/blocs/parpaings-15.jpg',
+    available: true,
+  },
+  {
+    id: 18,
     name: 'Parpaings 10x25x50',
     category: 'Blocs',
     price: 1.8,
     unit: 'pièce',
     description: 'Parpaing creux 10x25x50 cm pour cloisons légères',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop',
+    image: '/assets/images/blocs/parpaings-10.jpg',
     available: true,
   },
   {
-    id: 16,
+    id: 19,
     name: 'Bloc à bancher 21x25x50',
     category: 'Blocs',
     price: 3.2,
     unit: 'pièce',
     description: 'Bloc à bancher pour murs de soutènement',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop',
+    image: '/assets/images/blocs/bloc-bancher.jpg',
     available: true,
   },
   {
-    id: 17,
+    id: 20,
     name: 'Produits sur commande',
     category: 'Sur commande',
     price: 0,
     unit: 'Sur demande',
     description: 'Produits spéciaux disponibles sur commande uniquement',
-    image: 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?w=300&h=200&fit=crop',
+    image: '/assets/images/divers/sur-commande.jpg',
     available: false,
   },
 ];
@@ -467,18 +497,16 @@ function CatalogModule() {
 
                   {/* Image with Hover Overlay */}
                   <Box sx={{ position: 'relative', overflow: 'hidden' }}>
-                    <CardMedia
-                      component="img"
-                      height="240"
-                      image={product.image}
+                    <ProductImage
+                      src={product.image}
                       alt={product.name}
+                      height={240}
                       className="product-image"
                       sx={{ 
-                        objectFit: 'cover',
                         transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
                       }}
                     />
-                    
+                  
                     {/* Gradient Overlay with Icon */}
                     <Box
                       className="product-overlay"
@@ -496,98 +524,97 @@ function CatalogModule() {
                         transition: 'opacity 0.3s ease'
                       }}
                     >
-                      <VisibilityIcon sx={{ color: 'white', fontSize: '3rem' }} />
-                    </Box>
+                    <VisibilityIcon sx={{ color: 'white', fontSize: '3rem' }} />
+                  </Box>
+                </Box>
+                <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 3 }}>
+                  <Typography 
+                    variant="h6" 
+                    gutterBottom 
+                    sx={{ 
+                      fontWeight: 700, 
+                      lineHeight: 1.3,
+                      color: '#1e293b',
+                      mb: 2
+                    }}
+                  >
+                    {product.name}
+                  </Typography>
+                  
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary" 
+                    sx={{ 
+                      mb: 3, 
+                      flexGrow: 1,
+                      lineHeight: 1.6
+                    }}
+                  >
+                    {product.description}
+                  </Typography>
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Typography 
+                      variant="h5" 
+                      sx={{ 
+                        fontWeight: 800,
+                        background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
+                        backgroundClip: 'text',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}
+                    >
+                      {product.price > 0 ? `${product.price.toFixed(2)} €` : 'Sur demande'}
+                    </Typography>
+                    <Chip 
+                      label={product.unit} 
+                      size="small" 
+                      variant="outlined"
+                      sx={{ 
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        borderColor: '#FF6B35',
+                        color: '#FF6B35',
+                        borderRadius: '12px'
+                      }}
+                    />
                   </Box>
                   
-                  <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 3 }}>
-                    <Typography 
-                      variant="h6" 
-                      gutterBottom 
-                      sx={{ 
-                        fontWeight: 700, 
-                        lineHeight: 1.3,
-                        color: '#1e293b',
-                        mb: 2
-                      }}
-                    >
-                      {product.name}
-                    </Typography>
-                    
-                    <Typography 
-                      variant="body2" 
-                      color="text.secondary" 
-                      sx={{ 
-                        mb: 3, 
-                        flexGrow: 1,
-                        lineHeight: 1.6
-                      }}
-                    >
-                      {product.description}
-                    </Typography>
-                    
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                      <Typography 
-                        variant="h5" 
-                        sx={{ 
-                          fontWeight: 800,
-                          background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
-                          backgroundClip: 'text',
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent'
-                        }}
-                      >
-                        {product.price > 0 ? `${product.price.toFixed(2)} €` : 'Sur demande'}
-                      </Typography>
-                      <Chip 
-                        label={product.unit} 
-                        size="small" 
-                        variant="outlined"
-                        sx={{ 
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                          borderColor: '#FF6B35',
-                          color: '#FF6B35',
-                          borderRadius: '12px'
-                        }}
-                      />
-                    </Box>
-                    
-                    <Button
-                      variant={product.available ? "contained" : "outlined"}
-                      fullWidth
-                      startIcon={<ShoppingCartIcon />}
-                      onClick={() => product.available ? addToCart(product) : alert('Produit disponible sur commande uniquement')}
-                      disabled={!product.available && product.unit === 'Sur demande'}
-                      sx={{ 
-                        mt: 'auto',
-                        borderRadius: '16px',
-                        py: 1.5,
-                        fontSize: '0.95rem',
-                        fontWeight: 600,
-                        textTransform: 'none',
-                        ...(product.available ? {
-                          background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
-                          boxShadow: '0 4px 20px rgba(255, 107, 53, 0.3)',
-                          '&:hover': {
-                            background: 'linear-gradient(135deg, #E55A2B 0%, #E8851A 100%)',
-                            transform: 'translateY(-2px)',
-                            boxShadow: '0 8px 30px rgba(255, 107, 53, 0.4)',
-                          }
-                        } : {
-                          borderColor: '#64748b',
-                          color: '#64748b',
-                          '&:hover': {
-                            borderColor: '#475569',
-                            backgroundColor: 'rgba(100, 116, 139, 0.1)'
-                          }
-                        })
-                      }}
-                    >
-                      {product.available ? 'Précommander' : 'Sur demande'}
-                    </Button>
-                  </CardContent>
-                </Card>
+                  <Button
+                    variant={product.available ? "contained" : "outlined"}
+                    fullWidth
+                    startIcon={<ShoppingCartIcon />}
+                    onClick={() => product.available ? addToCart(product) : alert('Produit disponible sur commande uniquement')}
+                    disabled={!product.available && product.unit === 'Sur demande'}
+                    sx={{ 
+                      mt: 'auto',
+                      borderRadius: '16px',
+                      py: 1.5,
+                      fontSize: '0.95rem',
+                      fontWeight: 600,
+                      textTransform: 'none',
+                      ...(product.available ? {
+                        background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
+                        boxShadow: '0 4px 20px rgba(255, 107, 53, 0.3)',
+                        '&:hover': {
+                          background: 'linear-gradient(135deg, #E55A2B 0%, #E8851A 100%)',
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 8px 30px rgba(255, 107, 53, 0.4)',
+                        }
+                      } : {
+                        borderColor: '#64748b',
+                        color: '#64748b',
+                        '&:hover': {
+                          borderColor: '#475569',
+                          backgroundColor: 'rgba(100, 116, 139, 0.1)'
+                        }
+                      })
+                    }}
+                  >
+                    {product.available ? 'Précommander' : 'Sur demande'}
+                  </Button>
+                </CardContent>
+              </Card>
               </Fade>
             </Grid>
           ))}
