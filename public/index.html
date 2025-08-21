@@ -13,34 +13,3 @@
   <div id="root"></div>
 </body>
 </html>
-
-## 🔍 Diagnostic du problème :
-
-L'erreur indique que le fichier `index.html` n'est pas trouvé dans le dossier `public` lors du build. Cela peut être dû à :
-
-1. **Fichier index.html manquant ou corrompu**
-2. **Configuration de build incorrecte**
-3. **Problème de synchronisation Git**
-
-## 🛠️ Solutions à essayer :
-
-### **Solution 1 : Vérifier le fichier index.html**
-
-Assurez-vous que le fichier `/public/index.html` existe et contient :
-```html
-<!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="PROXIMAT - Matériaux de construction en Martinique" />
-    <title>PROXIMAT - Matériaux de construction</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
-</html>
-```

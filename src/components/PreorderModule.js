@@ -612,7 +612,8 @@ function PreorderModule() {
                       onClick={() => setActiveStep(2)}
                       sx={{
                         borderRadius: 3,
-                        background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
+                        // Ligne 779 - Remplacer le dégradé bleu par orange
+                        background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)', // Changé de #667eea 0%, #764ba2 100%
                         boxShadow: '0 8px 32px rgba(255, 107, 53, 0.3)',
                         '&:hover': {
                           boxShadow: '0 12px 40px rgba(255, 107, 53, 0.4)',

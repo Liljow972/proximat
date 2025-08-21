@@ -1,5 +1,5 @@
 import React, { useState, Suspense, memo } from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { 
   Box, 
@@ -10,260 +10,29 @@ import {
   Toolbar, 
   Typography,
   CircularProgress,
-  Fade
+  Fade,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+
+// Import du nouveau thème
+import modernTheme from './styles/theme';
 
 // Lazy loading des composants
 const EstimatorModule = React.lazy(() => import('./components/EstimatorModule'));
 const CatalogModule = React.lazy(() => import('./components/CatalogModule'));
 const PreorderModule = React.lazy(() => import('./components/PreorderModule'));
-
-// Theme configuration - Design Premium SaaS
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#FF6B00', // Orange accent premium
-      light: '#FF8A33',
-      dark: '#E55A00',
-      contrastText: '#FFFFFF',
-    },
-    secondary: {
-      main: '#2C2C2C', // Gris foncé élégant
-      light: '#4A4A4A',
-      dark: '#1A1A1A',
-      contrastText: '#FFFFFF',
-    },
-    background: {
-      default: '#FEFEFE', // Blanc cassé premium
-      paper: '#FFFFFF',
-    },
-    text: {
-      primary: '#1A1A1A', // Noir profond
-      secondary: '#6B6B6B', // Gris moyen
-    },
-    grey: {
-      50: '#FAFAFA',
-      100: '#F5F5F5',
-      200: '#EEEEEE',
-      300: '#E0E0E0',
-      400: '#BDBDBD',
-      500: '#9E9E9E',
-    },
-  },
-  typography: {
-    fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", "Arial", sans-serif',
-    h1: {
-      fontWeight: 800, // Extra bold pour les titres
-      fontSize: '3rem',
-      lineHeight: 1.1,
-      letterSpacing: '-0.02em',
-    },
-    h2: {
-      fontWeight: 700,
-      fontSize: '2.25rem',
-      lineHeight: 1.2,
-      letterSpacing: '-0.01em',
-    },
-    h3: {
-      fontWeight: 700,
-      fontSize: '1.875rem',
-      lineHeight: 1.25,
-    },
-    h4: {
-      fontWeight: 600,
-      fontSize: '1.5rem',
-      lineHeight: 1.3,
-    },
-    h5: {
-      fontWeight: 600,
-      fontSize: '1.25rem',
-      lineHeight: 1.4,
-    },
-    h6: {
-      fontWeight: 600,
-      fontSize: '1.125rem',
-      lineHeight: 1.4,
-    },
-    body1: {
-      fontSize: '1rem',
-      lineHeight: 1.7,
-      fontWeight: 400, // Texte fin et léger
-    },
-    body2: {
-      fontSize: '0.875rem',
-      lineHeight: 1.6,
-      fontWeight: 300, // Très léger
-    },
-    button: {
-      fontWeight: 500,
-      textTransform: 'none',
-      fontSize: '0.875rem',
-      letterSpacing: '0.01em',
-    },
-  },
-  shape: {
-    borderRadius: 20, // Coins arrondis XL
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 50, // Pill-shaped (arrondis complet)
-          padding: '14px 32px',
-          fontWeight: 500,
-          boxShadow: 'none',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          '&:hover': {
-            boxShadow: '0px 8px 25px rgba(255, 107, 0, 0.25)',
-            transform: 'translateY(-2px)',
-          },
-        },
-        containedPrimary: {
-          background: 'linear-gradient(135deg, #FF6B00 0%, #FF8533 50%, #FF6B00 100%)',
-          '&:hover': {
-            background: 'linear-gradient(135deg, #E55A00 0%, #FF6B00 50%, #E55A00 100%)',
-            boxShadow: '0px 12px 35px rgba(255, 107, 0, 0.4)',
-          },
-        },
-        outlined: {
-          borderWidth: '2px',
-          borderRadius: 50,
-          '&:hover': {
-            borderWidth: '2px',
-            backgroundColor: 'rgba(255, 107, 0, 0.04)',
-          },
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 24, // Coins arrondis XL
-          boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.06)', // Ombres très douces
-          border: '1px solid rgba(0, 0, 0, 0.04)',
-          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          backgroundColor: '#FFFFFF',
-          '&:hover': {
-            boxShadow: '0px 16px 60px rgba(0, 0, 0, 0.12)',
-            transform: 'translateY(-4px)',
-            borderColor: 'rgba(255, 107, 0, 0.1)',
-          },
-        },
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          borderRadius: 24,
-          boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.06)',
-          backgroundColor: '#FFFFFF',
-        },
-      },
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-root': {
-            borderRadius: 16,
-            backgroundColor: '#FAFAFA',
-            border: '1px solid rgba(0, 0, 0, 0.06)',
-            transition: 'all 0.3s ease',
-            '&:hover': {
-              backgroundColor: '#F8F8F8',
-              borderColor: 'rgba(255, 107, 0, 0.3)',
-            },
-            '&:hover fieldset': {
-              borderColor: 'rgba(255, 107, 0, 0.3)',
-            },
-            '&.Mui-focused': {
-              backgroundColor: '#FFFFFF',
-              boxShadow: '0px 4px 20px rgba(255, 107, 0, 0.15)',
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: '#FF6B00',
-              borderWidth: '2px',
-            },
-          },
-        },
-      },
-    },
-    MuiTab: {
-      styleOverrides: {
-        root: {
-          textTransform: 'none',
-          fontWeight: 500,
-          fontSize: '1rem',
-          minHeight: 72,
-          padding: '16px 24px',
-          margin: '0 8px',
-          borderRadius: 16,
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            backgroundColor: 'rgba(255, 107, 0, 0.04)',
-            transform: 'translateY(-1px)',
-          },
-          '&.Mui-selected': {
-            color: '#FF6B00',
-            backgroundColor: 'rgba(255, 107, 0, 0.08)',
-            fontWeight: 600,
-          },
-        },
-      },
-    },
-    MuiTabs: {
-      styleOverrides: {
-        root: {
-          '& .MuiTabs-indicator': {
-            display: 'none', // Masquer l'indicateur par défaut
-          },
-        },
-      },
-    },
-    MuiChip: {
-      styleOverrides: {
-        root: {
-          borderRadius: 50,
-          fontWeight: 500,
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            transform: 'scale(1.05)',
-          },
-        },
-      },
-    },
-  },
-});
-
-// Composant de chargement optimisé
-const LoadingSpinner = memo(() => (
-  <Fade in timeout={300}>
-    <Box 
-      display="flex" 
-      justifyContent="center" 
-      alignItems="center" 
-      minHeight="400px"
-      flexDirection="column"
-      gap={2}
-    >
-      <CircularProgress 
-        size={48} 
-        thickness={4}
-        sx={{ 
-          color: 'primary.main',
-          '& .MuiCircularProgress-circle': {
-            strokeLinecap: 'round',
-          }
-        }} 
-      />
-      <Typography variant="body2" color="text.secondary">
-        Chargement en cours...
-      </Typography>
-    </Box>
-  </Fade>
-));
 
 // TabPanel optimisé avec memoization
 const TabPanel = memo(({ children, value, index, ...other }) => {
@@ -280,7 +49,16 @@ const TabPanel = memo(({ children, value, index, ...other }) => {
           py: 6,
           px: 2,
         }}>
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspense fallback={
+            <Box 
+              display="flex" 
+              justifyContent="center" 
+              alignItems="center" 
+              minHeight="200px"
+            >
+              <CircularProgress size={40} thickness={4} />
+            </Box>
+          }>
             {children}
           </Suspense>
         </Box>
@@ -291,92 +69,202 @@ const TabPanel = memo(({ children, value, index, ...other }) => {
 
 // Composant App principal optimisé
 function App() {
-  const [tabValue, setTabValue] = useState(0);
+  const [value, setValue] = useState(0);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+    setMobileOpen(false);
   };
 
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ 
-        flexGrow: 1, 
-        bgcolor: 'background.default', 
-        minHeight: '100vh',
-        position: 'relative'
-      }}>
-        {/* Navigation sticky transparente */}
-        <AppBar 
-          position="sticky" 
-          elevation={0} 
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const tabs = [
+    { label: 'Estimateur', icon: <CalculateIcon />, index: 0 },
+    { label: 'Catalogue', icon: <InventoryIcon />, index: 1 },
+    { label: 'Précommandes', icon: <ShoppingCartIcon />, index: 2 },
+  ];
+
+  const drawer = (
+    <Box sx={{ width: 280, pt: 2 }}>
+      <Box sx={{ px: 3, pb: 2 }}>
+        <Typography 
+          variant="h5" 
           sx={{ 
-            bgcolor: 'rgba(255, 255, 255, 0.85)',
-            backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
-            transition: 'all 0.3s ease',
+            color: 'primary.main',
+            fontWeight: 700,
+            textAlign: 'center'
           }}
         >
-          <Container maxWidth="xl">
-            <Toolbar sx={{ py: 1 }}>
-              <Typography 
-                variant="h4" 
-                component="div" 
-                sx={{ 
-                  flexGrow: 1, 
-                  color: 'text.primary', 
-                  fontWeight: 800,
-                  letterSpacing: '-0.02em'
-                }}
+          Proximat
+        </Typography>
+      </Box>
+      <List>
+        {tabs.map((tab) => (
+          <ListItem 
+            button 
+            key={tab.index}
+            onClick={() => handleChange(null, tab.index)}
+            sx={{
+              mx: 2,
+              mb: 1,
+              borderRadius: 2,
+              backgroundColor: value === tab.index ? 'primary.main' : 'transparent',
+              color: value === tab.index ? 'white' : 'text.primary',
+              '&:hover': {
+                backgroundColor: value === tab.index ? 'primary.dark' : 'action.hover',
+              },
+            }}
+          >
+            <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+              {tab.icon}
+            </ListItemIcon>
+            <ListItemText 
+              primary={tab.label} 
+              primaryTypographyProps={{ fontWeight: 500 }}
+            />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
+  return (
+    <ThemeProvider theme={modernTheme}>
+      <CssBaseline />
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        minHeight: '100vh',
+        backgroundColor: 'background.default'
+      }}>
+        {/* Header moderne */}
+        <AppBar 
+          position="sticky" 
+          elevation={0}
+          sx={{
+            backgroundColor: 'background.paper',
+            backdropFilter: 'blur(20px)',
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+          }}
+        >
+          <Toolbar sx={{ px: { xs: 2, sm: 3 } }}>
+            {isMobile && (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 2 }}
               >
-                <Box component="span" sx={{ color: 'primary.main' }}>Proximat</Box>
-                <Box component="span" sx={{ fontWeight: 300, ml: 1 }}>SaaS</Box>
-              </Typography>
-              
+                <MenuIcon />
+              </IconButton>
+            )}
+            
+            <Typography 
+              variant="h4" 
+              component="div" 
+              sx={{ 
+                flexGrow: 1, 
+                color: 'primary.main',
+                fontWeight: 800,
+                letterSpacing: '-0.02em',
+                background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              Proximat
+            </Typography>
+
+            {!isMobile && (
               <Tabs 
-                value={tabValue} 
-                onChange={handleTabChange} 
-                aria-label="navigation tabs"
+                value={value} 
+                onChange={handleChange}
                 sx={{
                   '& .MuiTab-root': {
-                    color: 'text.secondary',
-                    minHeight: 48,
-                    fontSize: '0.95rem',
+                    minWidth: 120,
+                    fontWeight: 500,
                   }
                 }}
               >
-                <Tab 
-                  icon={<CalculateIcon sx={{ fontSize: 20 }} />} 
-                  label="Estimation" 
-                  iconPosition="start"
-                />
-                <Tab 
-                  icon={<InventoryIcon sx={{ fontSize: 20 }} />} 
-                  label="Catalogue" 
-                  iconPosition="start"
-                />
-                <Tab 
-                  icon={<ShoppingCartIcon sx={{ fontSize: 20 }} />} 
-                  label="Précommande" 
-                  iconPosition="start"
-                />
+                {tabs.map((tab) => (
+                  <Tab 
+                    key={tab.index}
+                    label={tab.label} 
+                    icon={tab.icon}
+                    iconPosition="start"
+                    sx={{
+                      textTransform: 'none',
+                      fontSize: '0.95rem',
+                    }}
+                  />
+                ))}
               </Tabs>
-            </Toolbar>
-          </Container>
+            )}
+          </Toolbar>
         </AppBar>
 
-        {/* Content avec lazy loading */}
-        <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
-          <TabPanel value={tabValue} index={0}>
-            <EstimatorModule />
-          </TabPanel>
-          <TabPanel value={tabValue} index={1}>
-            <CatalogModule />
-          </TabPanel>
-          <TabPanel value={tabValue} index={2}>
-            <PreorderModule />
-          </TabPanel>
-        </Container>
+        {/* Navigation mobile */}
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            display: { xs: 'block', md: 'none' },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: 280,
+              backgroundColor: 'background.paper',
+            },
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
+            <IconButton onClick={handleDrawerToggle}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          {drawer}
+        </Drawer>
+
+        {/* Contenu principal */}
+        <Box component="main" sx={{ flexGrow: 1, py: 3 }}>
+          <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3 } }}>
+            <Suspense 
+              fallback={
+                <Box 
+                  display="flex" 
+                  justifyContent="center" 
+                  alignItems="center" 
+                  minHeight="400px"
+                >
+                  <CircularProgress size={40} thickness={4} />
+                </Box>
+              }
+            >
+              <Fade in={true} timeout={300}>
+                <Box>
+                  <TabPanel value={value} index={0}>
+                    <EstimatorModule />
+                  </TabPanel>
+                  <TabPanel value={value} index={1}>
+                    <CatalogModule />
+                  </TabPanel>
+                  <TabPanel value={value} index={2}>
+                    <PreorderModule />
+                  </TabPanel>
+                </Box>
+              </Fade>
+            </Suspense>
+          </Container>
+        </Box>
       </Box>
     </ThemeProvider>
   );

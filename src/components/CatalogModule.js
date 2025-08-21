@@ -238,8 +238,8 @@ const categoryColors = {
   'Sables': '#F7931E',
   'Liants': '#FFD23F',
   'Ferraillage': '#06D6A0',
-  'Blocs': '#118AB2',
-  'Sur commande': '#073B4C',
+  'Blocs': '#FF8A33', // Changé de #118AB2 (bleu) vers orange
+  'Sur commande': '#E55A00', // Changé de #073B4C (bleu foncé) vers orange foncé
 };
 
 function CatalogModule() {
@@ -588,7 +588,7 @@ function CatalogModule() {
                     disabled={!product.available && product.unit === 'Sur demande'}
                     sx={{ 
                       mt: 'auto',
-                      borderRadius: '16px',
+                      borderRadius: '16px', // Déjà correct
                       py: 1.5,
                       fontSize: '0.95rem',
                       fontWeight: 600,

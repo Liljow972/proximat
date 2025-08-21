@@ -34,7 +34,7 @@ import {
 } from '@mui/material';
 import {
   Calculate as CalculateIcon,
-  PictureAsPdf as PdfIcon,
+  Print as PrintIcon,
   Email as EmailIcon,
   Info as InfoIcon,
   Clear as ClearIcon,
@@ -48,6 +48,12 @@ import {
 // Services
 import PDFService from '../services/pdfService';
 import EmailService from '../services/emailService';
+
+// Fonction capitalize personnalisée pour éviter les problèmes avec MUI
+const capitalize = (str) => {
+  if (typeof str !== 'string' || str.length === 0) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 // Liste complète des matériaux avec catégories et propriétés strictes
 const materials = [
@@ -203,6 +209,11 @@ const materials = [
     price_unit: 0 
   },
 ];
+
+const safeString = (value) => {
+  if (value === null || value === undefined) return '';
+  return String(value);
+};
 
 function EstimatorModule() {
   const [formData, setFormData] = useState({
@@ -519,10 +530,23 @@ const calculateEstimate = () => {
 
   const showNotification = (message, severity = 'info') => {
     setNotification({ open: true, message, severity });
+    // Auto-fermeture après 6 secondes pour éviter les messages persistants
+    setTimeout(() => {
+      setNotification(prev => ({ ...prev, open: false }));
+    }, 6000);
   };
 
   const handleCloseNotification = () => {
     setNotification({ ...notification, open: false });
+  };
+
+  // Ajout des fonctions manquantes
+  const handlePrint = () => {
+    generatePDF();
+  };
+
+  const handleSendEmail = () => {
+    sendEmail();
   };
 
   return (
@@ -577,9 +601,9 @@ const calculateEstimate = () => {
       </Box>
 
       {/* Layout deux colonnes */}
-      <Grid container spacing={4} sx={{ maxWidth: 1400, mx: 'auto', px: 2 }}>
-        {/* Colonne gauche - Formulaire */}
-        <Grid item xs={12} lg={6}>
+      <Grid container spacing={{ xs: 2, sm: 3, md: 4 }} sx={{ maxWidth: 1400, mx: 'auto', px: { xs: 1, sm: 2 } }}>
+        {/* Colonne formulaire - Priorité sur mobile */}
+        <Grid item xs={12} lg={6} order={{ xs: 1, lg: 1 }}>
           <Zoom in timeout={600}>
             <Card 
               sx={{ 
@@ -594,7 +618,7 @@ const calculateEstimate = () => {
                 }
               }}
             >
-              <CardContent sx={{ p: 4 }}>
+              <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
                   <Avatar 
                     sx={{ 
@@ -621,80 +645,79 @@ const calculateEstimate = () => {
                   <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
                     Dimensions du projet
                   </Typography>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} sm={4}>
-                      <TextField
-                        fullWidth
-                        label="Longueur"
-                        name="length"
-                        type="number"
-                        value={formData.length}
-                        onChange={handleInputChange}
-                        placeholder="ex: 5.5"
-                        inputProps={{ min: 0, step: 0.01 }}
-                        error={!!errors.length}
-                        helperText={errors.length || "en mètres (m)"}
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '&:hover': {
-                              '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'primary.main',
-                                borderWidth: '2px'
-                              }
-                            }
-                          }
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <TextField
-                        fullWidth
-                        label="Largeur"
-                        name="width"
-                        type="number"
-                        value={formData.width}
-                        onChange={handleInputChange}
-                        placeholder="ex: 3.2"
-                        inputProps={{ min: 0, step: 0.01 }}
-                        error={!!errors.width}
-                        helperText={errors.width || "en mètres (m)"}
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '&:hover': {
-                              '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'primary.main',
-                                borderWidth: '2px'
-                              }
-                            }
-                          }
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <TextField
-                        fullWidth
-                        label="Épaisseur"
-                        name="thickness"
-                        type="number"
-                        value={formData.thickness}
-                        onChange={handleInputChange}
-                        placeholder="ex: 15"
-                        inputProps={{ min: 0, step: 1 }}
-                        error={!!errors.thickness}
-                        helperText={errors.thickness || "en centimètres (cm)"}
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '&:hover': {
-                              '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'primary.main',
-                                borderWidth: '2px'
-                              }
-                            }
-                          }
-                        }}
-                      />
-                    </Grid>
+                {/* Configuration du projet responsive */}
+                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+                  Configuration
+                </Typography>
+                
+                <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: 4 }}>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      label="Longueur (m)"
+                      name="length"
+                      type="number"
+                      value={safeString(formData.length)}
+                      onChange={handleInputChange}
+                      error={!!errors.length}
+                      helperText={errors.length}
+                      fullWidth
+                      variant="outlined"
+                      InputProps={{
+                        startAdornment: <Typography sx={{ mr: 1, color: 'text.secondary' }}>L:</Typography>,
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'primary.main',
+                          borderWidth: '2px'
+                        }
+                      }}
+                    />
                   </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      label="Largeur (m)"
+                      name="width"
+                      type="number"
+                      value={safeString(formData.width)}
+                      onChange={handleInputChange}
+                      error={!!errors.width}
+                      helperText={errors.width}
+                      fullWidth
+                      variant="outlined"
+                      InputProps={{
+                        startAdornment: <Typography sx={{ mr: 1, color: 'text.secondary' }}>l:</Typography>,
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'primary.main',
+                          borderWidth: '2px'
+                        }
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      label="Épaisseur (m)"
+                      name="thickness"
+                      type="number"
+                      value={safeString(formData.thickness)}
+                      onChange={handleInputChange}
+                      error={!!errors.thickness}
+                      helperText={errors.thickness}
+                      fullWidth
+                      variant="outlined"
+                      InputProps={{
+                        startAdornment: <Typography sx={{ mr: 1, color: 'text.secondary' }}>e:</Typography>,
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'primary.main',
+                          borderWidth: '2px'
+                        }
+                      }}
+                    />
+                  </Grid>
+                </Grid>
                 </Box>
 
                 <Divider sx={{ my: 4, borderColor: 'rgba(255, 107, 0, 0.1)' }} />
@@ -806,18 +829,27 @@ const calculateEstimate = () => {
                 </Box>
 
                 {/* Boutons d'action */}
-                <Stack direction="row" spacing={2}>
+                <Stack 
+                  direction={{ xs: 'column', sm: 'row' }} 
+                  spacing={2}
+                  sx={{ mt: 3 }}
+                >
                   <Button
                     variant="contained"
                     onClick={calculateEstimate}
-                    startIcon={<CalculateIcon />}
-                    fullWidth
-                    size="large"
                     disabled={Object.keys(errors).length > 0}
+                    startIcon={<CalculateIcon />}
                     sx={{
-                      py: 1.5,
-                      fontSize: '1rem',
+                      py: { xs: 1.5, sm: 2 },
+                      px: { xs: 2, sm: 3 },
+                      fontSize: { xs: '0.875rem', sm: '1rem' },
                       fontWeight: 600,
+                      borderRadius: 3,
+                      textTransform: 'none',
+                      minWidth: { xs: '100%', sm: 'auto' },
+                      whiteSpace: { xs: 'nowrap', sm: 'normal' },
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
                       background: 'linear-gradient(135deg, #FF6B00 0%, #FF8533 100%)',
                       '&:hover': {
                         background: 'linear-gradient(135deg, #E55A00 0%, #FF6B00 100%)',
@@ -826,16 +858,17 @@ const calculateEstimate = () => {
                       }
                     }}
                   >
-                    Calculer l'estimation
+                    {window.innerWidth <= 600 ? 'Calculer' : 'Calculer l\'estimation'}
                   </Button>
                   <Button
                     variant="outlined"
                     onClick={resetForm}
                     size="large"
                     sx={{
-                      py: 1.5,
-                      minWidth: 120,
+                      py: { xs: 1.2, sm: 1.5 },
+                      minWidth: { xs: 'auto', sm: 120 },
                       borderWidth: '2px',
+                      fontSize: { xs: '0.875rem', sm: '1rem' },
                       '&:hover': {
                         borderWidth: '2px',
                         transform: 'translateY(-1px)'
@@ -851,7 +884,7 @@ const calculateEstimate = () => {
         </Grid>
 
         {/* Colonne droite - Résultats */}
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={6} order={{ xs: 2, lg: 2 }}>
           {results ? (
             <Fade in timeout={800}>
               <Card 
@@ -864,30 +897,56 @@ const calculateEstimate = () => {
                   }
                 }}
               >
-                <CardContent sx={{ p: 4 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+                <CardContent sx={{ p: { xs: 2, sm: 4 } }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    mb: { xs: 3, sm: 4 },
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    textAlign: { xs: 'center', sm: 'left' }
+                  }}>
                     <Avatar 
                       sx={{ 
-                        width: 48, 
-                        height: 48, 
-                        mr: 2,
+                        width: { xs: 40, sm: 48 }, 
+                        height: { xs: 40, sm: 48 }, 
+                        mr: { xs: 0, sm: 2 },
+                        mb: { xs: 1, sm: 0 },
                         background: 'linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%)'
                       }}
                     >
                       <ReceiptIcon sx={{ color: 'white' }} />
                     </Avatar>
                     <Box>
-                      <Typography variant="h5" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                      <Typography 
+                        variant="h5" 
+                        sx={{ 
+                          fontWeight: 700, 
+                          color: 'text.primary',
+                          fontSize: { xs: '1.25rem', sm: '1.5rem' }
+                        }}
+                      >
                         Résultats de l'estimation
                       </Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          color: 'text.secondary',
+                          fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                        }}
+                      >
                         Détail des calculs et prix
                       </Typography>
                     </Box>
                   </Box>
 
                   {/* Tags résumé */}
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 4 }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    flexWrap: 'wrap', 
+                    gap: { xs: 1, sm: 2 }, 
+                    mb: { xs: 3, sm: 4 },
+                    justifyContent: { xs: 'center', sm: 'flex-start' }
+                  }}>
                     <Chip 
                       icon={<TrendingUpIcon />}
                       label={`Surface: ${results.surface_m2} m²`}
@@ -915,15 +974,22 @@ const calculateEstimate = () => {
                     component={Paper} 
                     variant="outlined" 
                     sx={{ 
-                      mb: 4,
-                      borderRadius: 1.5,
+                      mb: { xs: 3, sm: 4 },
+                      borderRadius: { xs: 1, sm: 1.5 },
                       border: '1px solid rgba(0, 0, 0, 0.06)',
+                      overflowX: 'auto',
                       '& .MuiTableHead-root': {
                         background: 'linear-gradient(135deg, #FF6B00 0%, #FF8533 100%)'
                       },
                       '& .MuiTableHead-root .MuiTableCell-root': {
                         color: 'white',
-                        fontWeight: 700
+                        fontWeight: 700,
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                        padding: { xs: '8px 4px', sm: '16px 16px' }
+                      },
+                      '& .MuiTableBody-root .MuiTableCell-root': {
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                        padding: { xs: '8px 4px', sm: '16px 16px' }
                       }
                     }}
                   >
@@ -1044,74 +1110,57 @@ const calculateEstimate = () => {
                     Informations client & envoi
                   </Typography>
                   
-                  <Grid container spacing={3} sx={{ mb: 4 }}>
+                  <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: 4 }}>
                     <Grid item xs={12} sm={6}>
                       <TextField
-                        fullWidth
                         label="Nom du client"
-                        value={emailData.clientName}
-                        onChange={(e) => setEmailData(prev => ({ ...prev, clientName: e.target.value }))}
-                        required
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '&:hover': {
-                              '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'primary.main',
-                                borderWidth: '2px'
-                              }
-                            }
-                          }
-                        }}
+                        value={safeString(emailData.clientName)}
+                        onChange={(e) => setEmailData({...emailData, clientName: e.target.value})}
+                        fullWidth
+                        variant="outlined"
+                        sx={{ mb: 2 }}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
-                        fullWidth
                         label="Email du client"
                         type="email"
-                        value={emailData.clientEmail}
-                        onChange={(e) => setEmailData(prev => ({ ...prev, clientEmail: e.target.value }))}
-                        required
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '&:hover': {
-                              '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'primary.main',
-                                borderWidth: '2px'
-                              }
-                            }
-                          }
-                        }}
+                        value={safeString(emailData.clientEmail)}
+                        onChange={(e) => setEmailData({...emailData, clientEmail: e.target.value})}
+                        fullWidth
+                        variant="outlined"
+                        sx={{ mb: 2 }}
                       />
                     </Grid>
                   </Grid>
 
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
                     <Button
-                      variant="contained"
-                      startIcon={isGeneratingPDF ? <CircularProgress size={20} color="inherit" /> : <PdfIcon />}
-                      onClick={generatePDF}
-                      disabled={!results || isGeneratingPDF}
+                      variant="outlined"
+                      size="large"
+                      startIcon={<PrintIcon />}
+                      onClick={handlePrint}
                       sx={{
-                        background: 'linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%)',
+                        borderRadius: 3,
+                        flex: 1,
+                        borderWidth: '2px',
                         '&:hover': {
-                          background: 'linear-gradient(135deg, #388E3C 0%, #4CAF50 100%)',
-                          transform: 'translateY(-2px)',
-                          boxShadow: '0px 8px 25px rgba(76, 175, 80, 0.4)'
-                        },
-                        '&:disabled': {
-                          background: 'linear-gradient(135deg, #BDBDBD 0%, #E0E0E0 100%)',
+                          borderWidth: '2px',
+                          transform: 'translateY(-1px)'
                         }
                       }}
                     >
-                      {isGeneratingPDF ? 'Génération...' : 'Générer PDF'}
+                      Imprimer
                     </Button>
                     <Button
                       variant="outlined"
-                      startIcon={isSendingEmail ? <CircularProgress size={20} color="inherit" /> : <EmailIcon />}
-                      onClick={sendEmail}
-                      disabled={!results || !emailData.clientName || !emailData.clientEmail || isSendingEmail}
+                      size="large"
+                      startIcon={<EmailIcon />}
+                      onClick={handleSendEmail}
+                      disabled={isSendingEmail}
                       sx={{
+                        borderRadius: 3,
+                        flex: 1,
                         borderWidth: '2px',
                         '&:hover': {
                           borderWidth: '2px',
@@ -1126,23 +1175,6 @@ const calculateEstimate = () => {
                       {isSendingEmail ? 'Envoi...' : 'Envoyer par email'}
                     </Button>
                   </Stack>
-
-                  {/* Notification Snackbar */}
-                  <Snackbar
-                    open={notification.open}
-                    autoHideDuration={6000}
-                    onClose={handleCloseNotification}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                  >
-                    <Alert 
-                      onClose={handleCloseNotification} 
-                      severity={notification.severity}
-                      sx={{ width: '100%' }}
-                      icon={notification.severity === 'success' ? <CheckCircleIcon /> : undefined}
-                    >
-                      {notification.message}
-                    </Alert>
-                  </Snackbar>
                 </CardContent>
               </Card>
             </Fade>
