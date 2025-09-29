@@ -44,7 +44,7 @@ class PDFService {
   }
 
   // Télécharge le PDF (pour le bouton "Générer PDF")
-  downloadPDF(filename = 'devis-proximat.pdf') {
+  downloadPDF(filename = 'devis-proximat224.pdf') {
     if (!this.doc) {
       throw new Error('Aucun PDF généré');
     }
@@ -65,14 +65,14 @@ class PDFService {
   addHeader() {
     // En-tête avec logo et informations entreprise
     this.doc.setFontSize(24);
-    this.doc.setTextColor(255, 107, 53); // Orange PROXIMAT
-    this.doc.text('PROXIMAT', this.pageWidth / 2, 30, { align: 'center' });
+    this.doc.setTextColor(255, 107, 53); // Orange PROXIMAT 224
+    this.doc.text('PROXIMAT 224', this.pageWidth / 2, 30, { align: 'center' });
     
     this.doc.setFontSize(12);
     this.doc.setTextColor(100, 100, 100);
     this.doc.text('Matériaux de construction', this.pageWidth / 2, 40, { align: 'center' });
     this.doc.text('Quartier morne-vert à Ducos 97224, Martinique', this.pageWidth / 2, 46, { align: 'center' });
-    this.doc.text('Tél: 0596 03 70 01 | Email: contact@proximat.fr', this.pageWidth / 2, 52, { align: 'center' });
+    this.doc.text('Tél: 0596 03 70 01 | Email: contact@proximat224.fr', this.pageWidth / 2, 52, { align: 'center' });
     
     // Ligne de séparation
     this.doc.setDrawColor(255, 107, 53);
@@ -155,7 +155,7 @@ class PDFService {
     this.doc.setFontSize(8);
     this.doc.setTextColor(100, 100, 100);
     this.doc.text('Devis valable 30 jours - Prix HT', this.pageWidth / 2, footerY, { align: 'center' });
-    this.doc.text('PROXIMAT - Matériaux de construction', this.pageWidth / 2, footerY + 8, { align: 'center' });
+    this.doc.text('PROXIMAT 224 - Matériaux de construction', this.pageWidth / 2, footerY + 8, { align: 'center' });
   }
 }
 

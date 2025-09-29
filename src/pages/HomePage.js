@@ -81,7 +81,7 @@ function HomePage() {
             gutterBottom
             sx={{ fontWeight: 'bold' }}
           >
-            Proximat
+            Proximat 224
           </Typography>
           <Typography variant="h5" color="inherit" paragraph>
             Votre solution complète pour l'estimation de matériaux de chantier

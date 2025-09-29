@@ -28,7 +28,7 @@ function Footer() {
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <ConstructionIcon sx={{ mr: 1, color: 'primary.main', fontSize: 30 }} />
               <Typography variant="h5" fontWeight="bold">
-                PROXIMAT
+                PROXIMAT 224
               </Typography>
             </Box>
             <Typography variant="body2" sx={{ mb: 2, color: 'rgba(255,255,255,0.7)' }}>
@@ -111,7 +111,7 @@ function Footer() {
             <Box sx={{ display: 'flex', mb: 2 }}>
               <EmailIcon sx={{ mr: 1, color: 'primary.main' }} />
               <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
-                contact@proximat.fr
+                contact@proximat224.fr
               </Typography>
             </Box>
           </Grid>
@@ -124,7 +124,7 @@ function Footer() {
           {new Date().getFullYear()}
           {' '}
           <Link color="primary" href="/">
-            Proximat
+            Proximat 224
           </Link>
           {' - Tous droits réservés'}
         </Typography>

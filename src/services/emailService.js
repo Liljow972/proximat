@@ -35,10 +35,10 @@ class EmailService {
       const templateParams = {
         to_name: clientData.clientName || 'Client',
         to_email: clientData.clientEmail,
-        from_name: 'PROXIMAT',
+        from_name: 'PROXIMAT 224',
         subject: `Devis estimatif - ${new Date().toLocaleDateString('fr-FR')}`,
         message: this.generateEstimateEmailContent(estimateData),
-        reply_to: 'contact@proximat.fr'
+        reply_to: 'contact@proximat224.fr'
       };
 
       console.log('Envoi email avec les paramètres:', templateParams);
@@ -77,10 +77,10 @@ class EmailService {
       const templateParams = {
         to_name: clientData.customerName || 'Client',
         to_email: clientData.customerEmail,
-        from_name: 'PROXIMAT',
+        from_name: 'PROXIMAT 224',
         subject: `Confirmation de précommande - ${new Date().toLocaleDateString('fr-FR')}`,
         message: this.generatePreorderEmailContent(orderData),
-        reply_to: 'contact@proximat.fr'
+        reply_to: 'contact@proximat224.fr'
       };
 
       const response = await emailjs.send(

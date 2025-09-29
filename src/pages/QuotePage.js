@@ -111,7 +111,7 @@ function QuotePage() {
                       label="Nom"
                       {...register('clientName', { required: 'Le nom est requis' })}
                       error={!!errors.clientName}
-                      helperText={errors.clientName?.message}
+                      helperText={errors.clientName?.message || ''}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -120,7 +120,7 @@ function QuotePage() {
                       label="Prénom"
                       {...register('clientFirstName', { required: 'Le prénom est requis' })}
                       error={!!errors.clientFirstName}
-                      helperText={errors.clientFirstName?.message}
+                      helperText={errors.clientFirstName?.message || ''}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -136,7 +136,7 @@ function QuotePage() {
                         }
                       })}
                       error={!!errors.clientEmail}
-                      helperText={errors.clientEmail?.message}
+                      helperText={errors.clientEmail?.message || ''}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -145,7 +145,7 @@ function QuotePage() {
                       label="Téléphone"
                       {...register('clientPhone', { required: 'Le téléphone est requis' })}
                       error={!!errors.clientPhone}
-                      helperText={errors.clientPhone?.message}
+                      helperText={errors.clientPhone?.message || ''}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -156,7 +156,7 @@ function QuotePage() {
                       rows={2}
                       {...register('clientAddress', { required: 'L\'adresse est requise' })}
                       error={!!errors.clientAddress}
-                      helperText={errors.clientAddress?.message}
+                      helperText={errors.clientAddress?.message || ''}
                     />
                   </Grid>
                 </Grid>
@@ -175,7 +175,7 @@ function QuotePage() {
                       label="Titre du projet"
                       {...register('projectTitle', { required: 'Le titre du projet est requis' })}
                       error={!!errors.projectTitle}
-                      helperText={errors.projectTitle?.message}
+                      helperText={errors.projectTitle?.message || ''}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -186,7 +186,7 @@ function QuotePage() {
                       rows={4}
                       {...register('projectDescription', { required: 'La description est requise' })}
                       error={!!errors.projectDescription}
-                      helperText={errors.projectDescription?.message}
+                      helperText={errors.projectDescription?.message || ''}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -197,7 +197,7 @@ function QuotePage() {
                       InputLabelProps={{ shrink: true }}
                       {...register('startDate', { required: 'La date de début est requise' })}
                       error={!!errors.startDate}
-                      helperText={errors.startDate?.message}
+                      helperText={errors.startDate?.message || ''}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -208,7 +208,7 @@ function QuotePage() {
                       InputLabelProps={{ shrink: true }}
                       {...register('endDate', { required: 'La date de fin est requise' })}
                       error={!!errors.endDate}
-                      helperText={errors.endDate?.message}
+                      helperText={errors.endDate?.message || ''}
                     />
                   </Grid>
                 </Grid>

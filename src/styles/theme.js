@@ -1,13 +1,13 @@
 import { createTheme } from '@mui/material/styles';
 
-// Palette de couleurs moderne et professionnelle
+// Palette de couleurs moderne et professionnelle améliorée
 const colors = {
   primary: {
-    50: '#FFF4F1',
-    100: '#FFE6DC',
-    200: '#FFCCBA',
-    300: '#FFB199',
-    400: '#FF8A66',
+    50: '#FFF8F5',
+    100: '#FFEDE5',
+    200: '#FFD6C2',
+    300: '#FFBF9F',
+    400: '#FF9966',
     500: '#FF6B35', // Couleur principale
     600: '#E55A2B',
     700: '#CC4A21',
@@ -15,22 +15,24 @@ const colors = {
     900: '#992A0D',
   },
   secondary: {
-    50: '#F8F9FA',
-    100: '#E9ECEF',
-    200: '#DEE2E6',
-    300: '#CED4DA',
-    400: '#ADB5BD',
-    500: '#6C757D',
-    600: '#495057',
-    700: '#343A40',
-    800: '#212529',
-    900: '#1A1D20',
+    50: '#F8FAFC',
+    100: '#F1F5F9',
+    200: '#E2E8F0',
+    300: '#CBD5E1',
+    400: '#94A3B8',
+    500: '#64748B',
+    600: '#475569',
+    700: '#334155',
+    800: '#1E293B',
+    900: '#0F172A',
   },
   accent: {
-    blue: '#4A90E2',
-    green: '#7ED321',
-    purple: '#9013FE',
-    teal: '#00BCD4',
+    blue: '#3B82F6',
+    green: '#10B981',
+    purple: '#8B5CF6',
+    teal: '#14B8A6',
+    yellow: '#F59E0B',
+    pink: '#EC4899',
   },
   neutral: {
     50: '#FAFBFC',
@@ -46,7 +48,7 @@ const colors = {
   }
 };
 
-// Thème principal amélioré
+// Thème principal amélioré avec de nouveaux styles
 export const modernTheme = createTheme({
   palette: {
     mode: 'light',
@@ -72,12 +74,12 @@ export const modernTheme = createTheme({
     },
     grey: colors.neutral,
     success: {
-      main: '#10B981',
+      main: colors.accent.green,
       light: '#34D399',
       dark: '#059669',
     },
     warning: {
-      main: '#F59E0B',
+      main: colors.accent.yellow,
       light: '#FCD34D',
       dark: '#D97706',
     },
@@ -96,36 +98,37 @@ export const modernTheme = createTheme({
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
       fontWeight: 800,
-      fontSize: '3rem',
-      lineHeight: 1.2,
-      letterSpacing: '-0.02em',
+      fontSize: '3.5rem',
+      lineHeight: 1.1,
+      letterSpacing: '-0.025em',
     },
     h2: {
       fontWeight: 700,
-      fontSize: '2.25rem',
-      lineHeight: 1.3,
-      letterSpacing: '-0.01em',
+      fontSize: '2.5rem',
+      lineHeight: 1.2,
+      letterSpacing: '-0.02em',
     },
     h3: {
       fontWeight: 600,
-      fontSize: '1.875rem',
-      lineHeight: 1.4,
-      letterSpacing: '-0.01em',
+      fontSize: '2rem',
+      lineHeight: 1.3,
+      letterSpacing: '-0.015em',
     },
     h4: {
       fontWeight: 600,
-      fontSize: '1.5rem',
-      lineHeight: 1.4,
+      fontSize: '1.75rem',
+      lineHeight: 1.3,
+      letterSpacing: '-0.01em',
     },
     h5: {
       fontWeight: 500,
-      fontSize: '1.25rem',
-      lineHeight: 1.5,
+      fontSize: '1.5rem',
+      lineHeight: 1.4,
     },
     h6: {
       fontWeight: 500,
-      fontSize: '1.125rem',
-      lineHeight: 1.5,
+      fontSize: '1.25rem',
+      lineHeight: 1.4,
     },
     body1: {
       fontSize: '1rem',
@@ -157,10 +160,28 @@ export const modernTheme = createTheme({
     'none',
     '0px 1px 3px rgba(0, 0, 0, 0.05)',
     '0px 4px 6px rgba(0, 0, 0, 0.05)',
-    '0px 10px 15px rgba(0, 0, 0, 0.1)',
+    '0px 10px 15px rgba(0, 0, 0, 0.08)',
     '0px 20px 25px rgba(0, 0, 0, 0.1)',
-    '0px 25px 50px rgba(0, 0, 0, 0.15)',
-    // ... autres ombres
+    '0px 25px 50px rgba(0, 0, 0, 0.12)',
+    '0px 6px 10px rgba(0, 0, 0, 0.06)',
+    '0px 8px 14px rgba(0, 0, 0, 0.07)',
+    '0px 12px 17px rgba(0, 0, 0, 0.08)',
+    '0px 16px 24px rgba(0, 0, 0, 0.09)',
+    '0px 20px 32px rgba(0, 0, 0, 0.1)',
+    '0px 24px 38px rgba(0, 0, 0, 0.11)',
+    '0px 28px 45px rgba(0, 0, 0, 0.12)',
+    '0px 32px 52px rgba(0, 0, 0, 0.13)',
+    '0px 36px 58px rgba(0, 0, 0, 0.14)',
+    '0px 40px 65px rgba(0, 0, 0, 0.15)',
+    '0px 44px 72px rgba(0, 0, 0, 0.16)',
+    '0px 48px 78px rgba(0, 0, 0, 0.17)',
+    '0px 52px 85px rgba(0, 0, 0, 0.18)',
+    '0px 56px 91px rgba(0, 0, 0, 0.19)',
+    '0px 60px 98px rgba(0, 0, 0, 0.2)',
+    '0px 64px 105px rgba(0, 0, 0, 0.21)',
+    '0px 68px 111px rgba(0, 0, 0, 0.22)',
+    '0px 72px 118px rgba(0, 0, 0, 0.23)',
+    '0px 76px 124px rgba(0, 0, 0, 0.24)',
   ],
   components: {
     MuiButton: {
@@ -174,8 +195,8 @@ export const modernTheme = createTheme({
           boxShadow: 'none',
           transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
           '&:hover': {
-            transform: 'translateY(-1px)',
-            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)',
+            transform: 'translateY(-2px)',
+            boxShadow: '0px 8px 25px rgba(0, 0, 0, 0.15)',
           },
           '&:active': {
             transform: 'translateY(0)',
@@ -185,19 +206,27 @@ export const modernTheme = createTheme({
           background: `linear-gradient(135deg, ${colors.primary[500]} 0%, ${colors.primary[600]} 100%)`,
           '&:hover': {
             background: `linear-gradient(135deg, ${colors.primary[600]} 0%, ${colors.primary[700]} 100%)`,
-            boxShadow: `0px 8px 25px rgba(${parseInt(colors.primary[500].slice(1, 3), 16)}, ${parseInt(colors.primary[500].slice(3, 5), 16)}, ${parseInt(colors.primary[500].slice(5, 7), 16)}, 0.3)`,
+            boxShadow: `0px 12px 30px rgba(255, 107, 53, 0.4)`,
+          },
+        },
+        containedSecondary: {
+          background: `linear-gradient(135deg, ${colors.secondary[600]} 0%, ${colors.secondary[700]} 100%)`,
+          '&:hover': {
+            background: `linear-gradient(135deg, ${colors.secondary[700]} 0%, ${colors.secondary[800]} 100%)`,
           },
         },
         outlined: {
-          borderWidth: '1.5px',
+          borderWidth: '2px',
           '&:hover': {
-            borderWidth: '1.5px',
+            borderWidth: '2px',
             backgroundColor: `${colors.primary[500]}08`,
+            transform: 'translateY(-1px)',
           },
         },
         text: {
           '&:hover': {
             backgroundColor: `${colors.primary[500]}08`,
+            transform: 'translateY(-1px)',
           },
         },
       },
@@ -206,13 +235,14 @@ export const modernTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 20,
-          boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.08)',
+          boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.06)',
           border: `1px solid ${colors.neutral[200]}`,
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           backgroundColor: '#FFFFFF',
+          overflow: 'hidden',
           '&:hover': {
-            boxShadow: '0px 12px 40px rgba(0, 0, 0, 0.12)',
-            transform: 'translateY(-4px)',
+            boxShadow: '0px 16px 50px rgba(0, 0, 0, 0.12)',
+            transform: 'translateY(-6px)',
             borderColor: colors.primary[200],
           },
         },
@@ -231,6 +261,9 @@ export const modernTheme = createTheme({
         elevation2: {
           boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)',
         },
+        elevation3: {
+          boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.1)',
+        },
       },
     },
     MuiTextField: {
@@ -242,7 +275,7 @@ export const modernTheme = createTheme({
             transition: 'all 0.2s ease',
             '& fieldset': {
               borderColor: colors.neutral[300],
-              borderWidth: '1.5px',
+              borderWidth: '2px',
             },
             '&:hover': {
               '& fieldset': {
@@ -253,6 +286,7 @@ export const modernTheme = createTheme({
               '& fieldset': {
                 borderColor: colors.primary[500],
                 borderWidth: '2px',
+                boxShadow: `0 0 0 3px ${colors.primary[500]}20`,
               },
             },
           },
@@ -273,6 +307,7 @@ export const modernTheme = createTheme({
           '&:hover': {
             backgroundColor: `${colors.primary[500]}10`,
             color: colors.primary[600],
+            transform: 'translateY(-1px)',
           },
           '&.Mui-selected': {
             color: colors.primary[600],
@@ -294,10 +329,10 @@ export const modernTheme = createTheme({
     MuiChip: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: 10,
           fontWeight: 500,
           fontSize: '0.75rem',
-          height: 28,
+          height: 32,
           transition: 'all 0.2s ease',
           '&:hover': {
             transform: 'scale(1.05)',
@@ -306,16 +341,24 @@ export const modernTheme = createTheme({
         colorPrimary: {
           backgroundColor: `${colors.primary[500]}15`,
           color: colors.primary[700],
+          border: `1px solid ${colors.primary[200]}`,
           '&:hover': {
             backgroundColor: `${colors.primary[500]}25`,
+            borderColor: colors.primary[300],
           },
+        },
+        colorSecondary: {
+          backgroundColor: `${colors.secondary[500]}15`,
+          color: colors.secondary[700],
+          border: `1px solid ${colors.secondary[200]}`,
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#FFFFFF',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
           color: colors.neutral[800],
           boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.05)',
           borderBottom: `1px solid ${colors.neutral[200]}`,
@@ -329,16 +372,66 @@ export const modernTheme = createTheme({
           fontWeight: 600,
           fontSize: '0.875rem',
           color: colors.neutral[700],
+          borderBottom: `2px solid ${colors.neutral[200]}`,
         },
         body: {
           fontSize: '0.875rem',
+          borderBottom: `1px solid ${colors.neutral[100]}`,
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          transition: 'all 0.2s ease',
+          '&:hover': {
+            backgroundColor: `${colors.primary[500]}10`,
+            transform: 'scale(1.05)',
+          },
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius: 20,
+          boxShadow: '0px 20px 60px rgba(0, 0, 0, 0.15)',
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          border: '1px solid',
+        },
+        standardSuccess: {
+          backgroundColor: `${colors.accent.green}10`,
+          borderColor: `${colors.accent.green}30`,
+          color: colors.accent.green,
+        },
+        standardError: {
+          backgroundColor: '#EF444410',
+          borderColor: '#EF444430',
+          color: '#DC2626',
+        },
+        standardWarning: {
+          backgroundColor: `${colors.accent.yellow}10`,
+          borderColor: `${colors.accent.yellow}30`,
+          color: '#D97706',
+        },
+        standardInfo: {
+          backgroundColor: `${colors.accent.blue}10`,
+          borderColor: `${colors.accent.blue}30`,
+          color: colors.accent.blue,
         },
       },
     },
   },
 });
 
-// Thème sombre (optionnel)
+// Thème sombre amélioré
 export const darkTheme = createTheme({
   ...modernTheme,
   palette: {

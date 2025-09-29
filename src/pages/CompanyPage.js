@@ -209,10 +209,10 @@ function CompanyPage() {
       <Grid container spacing={6} sx={{ mb: 8 }}>
         <Grid item xs={12} md={6}>
           <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, color: 'primary.main' }}>
-            À propos de Proximat
+            À propos de Proximat 224
           </Typography>
           <Typography variant="body1" paragraph>
-            Fondée en 2010, Proximat s'est imposée comme un leader dans la fourniture de matériaux de construction de haute qualité. Notre mission est de fournir aux professionnels et aux particuliers les meilleurs produits au meilleur prix, avec un service client exceptionnel.
+            Fondée en 2010, Proximat 224 s'est imposée comme un leader dans la fourniture de matériaux de construction de haute qualité. Notre mission est de fournir aux professionnels et aux particuliers les meilleurs produits au meilleur prix, avec un service client exceptionnel.
           </Typography>
           <Typography variant="body1" paragraph>
             Nous sommes fiers de notre équipe d'experts qui peut vous conseiller sur tous vos projets, qu'il s'agisse de construction neuve ou de rénovation. Notre vaste gamme de produits comprend tout ce dont vous avez besoin, du ciment aux finitions.
@@ -478,7 +478,7 @@ function CompanyPage() {
                         fullWidth
                         label="Prénom"
                         error={!!errors.firstName}
-                        helperText={errors.firstName?.message}
+                        helperText={errors.firstName?.message || ''}
                       />
                     )}
                   />
@@ -495,7 +495,7 @@ function CompanyPage() {
                         fullWidth
                         label="Nom"
                         error={!!errors.lastName}
-                        helperText={errors.lastName?.message}
+                        helperText={errors.lastName?.message || ''}
                       />
                     )}
                   />
@@ -518,7 +518,7 @@ function CompanyPage() {
                         fullWidth
                         label="Email"
                         error={!!errors.email}
-                        helperText={errors.email?.message}
+                        helperText={errors.email?.message || ''}
                       />
                     )}
                   />
@@ -551,7 +551,7 @@ function CompanyPage() {
                         multiline
                         rows={4}
                         error={!!errors.message}
-                        helperText={errors.message?.message}
+                        helperText={errors.message?.message || ''}
                       />
                     )}
                   />
@@ -600,7 +600,7 @@ function CompanyPage() {
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Email color="primary" sx={{ mr: 2 }} />
                       <Typography variant="body1">
-                        contact@proximat.fr
+                        contact@proximat224.fr
                       </Typography>
                     </Box>
                   </Stack>

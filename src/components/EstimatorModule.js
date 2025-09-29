@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Card,
@@ -31,6 +31,12 @@ import {
   Zoom,
   CircularProgress,
   Snackbar,
+  Slide,
+  Collapse,
+  LinearProgress,
+  Badge,
+  ButtonGroup,
+  Skeleton,
 } from '@mui/material';
 import {
   Calculate as CalculateIcon,
@@ -43,17 +49,15 @@ import {
   Receipt as ReceiptIcon,
   TrendingUp as TrendingUpIcon,
   CheckCircle as CheckCircleIcon,
+  Add as AddIcon,
+  Refresh as RefreshIcon,
 } from '@mui/icons-material';
 
 // Services
 import PDFService from '../services/pdfService';
 import EmailService from '../services/emailService';
 
-// Fonction capitalize personnalisée pour éviter les problèmes avec MUI
-const capitalize = (str) => {
-  if (typeof str !== 'string' || str.length === 0) return str;
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
+
 
 // Liste complète des matériaux avec catégories et propriétés strictes
 const materials = [
@@ -279,10 +283,7 @@ function EstimatorModule() {
     }));
   };
 
-  const roundUp = (value, decimals) => {
-    const factor = Math.pow(10, decimals);
-    return Math.ceil(value * factor) / factor;
-  };
+
 
   const roundToHalfCubicMeter = (volume) => {
   return Math.ceil(volume * 2) / 2; // Arrondit au demi m³ supérieur
@@ -449,6 +450,7 @@ const calculateEstimate = () => {
     setEmailData({ clientName: '', clientEmail: '' });
     setErrors({});
     setSelectValue('');
+    showNotification('Formulaire réinitialisé', 'success');
   };
 
   const getCategoryLabel = (category) => {
@@ -536,9 +538,7 @@ const calculateEstimate = () => {
     }, 6000);
   };
 
-  const handleCloseNotification = () => {
-    setNotification({ ...notification, open: false });
-  };
+
 
   // Ajout des fonctions manquantes
   const handlePrint = () => {
@@ -659,7 +659,7 @@ const calculateEstimate = () => {
                       value={safeString(formData.length)}
                       onChange={handleInputChange}
                       error={!!errors.length}
-                      helperText={errors.length}
+                      helperText={safeString(errors.length)}
                       fullWidth
                       variant="outlined"
                       InputProps={{
@@ -681,7 +681,7 @@ const calculateEstimate = () => {
                       value={safeString(formData.width)}
                       onChange={handleInputChange}
                       error={!!errors.width}
-                      helperText={errors.width}
+                      helperText={safeString(errors.width)}
                       fullWidth
                       variant="outlined"
                       InputProps={{
@@ -703,7 +703,7 @@ const calculateEstimate = () => {
                       value={safeString(formData.thickness)}
                       onChange={handleInputChange}
                       error={!!errors.thickness}
-                      helperText={errors.thickness}
+                      helperText={safeString(errors.thickness)}
                       fullWidth
                       variant="outlined"
                       InputProps={{
@@ -768,29 +768,37 @@ const calculateEstimate = () => {
                     </Select>
                   </FormControl>
 
-                  {/* Tags matériaux sélectionnés */}
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mb: 3 }}>
-                    {formData.selectedMaterials.map((material) => (
-                      <Chip
-                        key={material.id}
-                        label={material.name}
-                        onDelete={() => handleMaterialRemove(material.id)}
-                        deleteIcon={<ClearIcon />}
-                        color={material.category === 'granulaire' ? 'primary' : 
-                               material.category === 'ciment' ? 'secondary' : 
-                               material.category === 'unitaire' ? 'warning' : 'default'}
-                        variant="filled"
-                        sx={{
-                          fontWeight: 500,
-                          '&:hover': {
-                            transform: 'scale(1.05)',
-                            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)'
-                          },
-                          transition: 'all 0.2s ease'
-                        }}
-                      />
-                    ))}
-                  </Box>
+                  {/* Tags matériaux sélectionnés avec animations */}
+                  <Collapse in={formData.selectedMaterials.length > 0}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mb: 3 }}>
+                      {formData.selectedMaterials.map((material, index) => (
+                        <Slide 
+                          key={material.id} 
+                          direction="right" 
+                          in={true} 
+                          timeout={300 + index * 100}
+                        >
+                          <Chip
+                            label={material.name}
+                            onDelete={() => handleMaterialRemove(material.id)}
+                            deleteIcon={<ClearIcon />}
+                            color={material.category === 'granulaire' ? 'primary' : 
+                                   material.category === 'ciment' ? 'secondary' : 
+                                   material.category === 'unitaire' ? 'warning' : 'default'}
+                            variant="filled"
+                            sx={{
+                              fontWeight: 500,
+                              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                              '&:hover': {
+                                transform: 'scale(1.05) translateY(-2px)',
+                                boxShadow: '0px 8px 25px rgba(0, 0, 0, 0.15)'
+                              }
+                            }}
+                          />
+                        </Slide>
+                      ))}
+                    </Box>
+                  </Collapse>
 
                   {/* Quantités manuelles */}
                   {formData.selectedMaterials.filter(m => m.category === 'unitaire').length > 0 && (
@@ -829,55 +837,125 @@ const calculateEstimate = () => {
                 </Box>
 
                 {/* Boutons d'action */}
-                <Stack 
-                  direction={{ xs: 'column', sm: 'row' }} 
-                  spacing={2}
-                  sx={{ mt: 3 }}
-                >
-                  <Button
-                    variant="contained"
-                    onClick={calculateEstimate}
-                    disabled={Object.keys(errors).length > 0}
-                    startIcon={<CalculateIcon />}
-                    sx={{
-                      py: { xs: 1.5, sm: 2 },
-                      px: { xs: 2, sm: 3 },
-                      fontSize: { xs: '0.875rem', sm: '1rem' },
-                      fontWeight: 600,
-                      borderRadius: 3,
-                      textTransform: 'none',
-                      minWidth: { xs: '100%', sm: 'auto' },
-                      whiteSpace: { xs: 'nowrap', sm: 'normal' },
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      background: 'linear-gradient(135deg, #FF6B00 0%, #FF8533 100%)',
-                      '&:hover': {
-                        background: 'linear-gradient(135deg, #E55A00 0%, #FF6B00 100%)',
-                        transform: 'translateY(-2px)',
-                        boxShadow: '0px 12px 35px rgba(255, 107, 0, 0.4)'
-                      }
-                    }}
-                  >
-                    {window.innerWidth <= 600 ? 'Calculer' : 'Calculer l\'estimation'}
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={resetForm}
-                    size="large"
-                    sx={{
-                      py: { xs: 1.2, sm: 1.5 },
-                      minWidth: { xs: 'auto', sm: 120 },
-                      borderWidth: '2px',
-                      fontSize: { xs: '0.875rem', sm: '1rem' },
-                      '&:hover': {
-                        borderWidth: '2px',
-                        transform: 'translateY(-1px)'
-                      }
-                    }}
-                  >
-                    Reset
-                  </Button>
-                </Stack>
+                <Collapse in timeout={600}>
+                  <Box sx={{ mt: 4 }}>
+                    <Divider sx={{ mb: 3, borderColor: 'rgba(255, 107, 0, 0.1)' }} />
+                    
+                    <ButtonGroup
+                      orientation="horizontal"
+                      variant="contained"
+                      fullWidth
+                      sx={{
+                        '& .MuiButton-root': {
+                          borderRadius: { xs: 2, sm: '0' },
+                          py: { xs: 1.5, sm: 2 },
+                          fontSize: { xs: '0.875rem', sm: '1rem' },
+                          fontWeight: 600,
+                          textTransform: 'none',
+                          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        },
+                        '& .MuiButton-root:first-of-type': {
+                          borderTopLeftRadius: { xs: 2, sm: 3 },
+                          borderBottomLeftRadius: { xs: 2, sm: 3 },
+                          borderTopRightRadius: { xs: 2, sm: 0 },
+                          borderBottomRightRadius: { xs: 2, sm: 0 },
+                        },
+                        '& .MuiButton-root:last-of-type': {
+                          borderTopRightRadius: { xs: 2, sm: 3 },
+                          borderBottomRightRadius: { xs: 2, sm: 3 },
+                          borderTopLeftRadius: { xs: 2, sm: 0 },
+                          borderBottomLeftRadius: { xs: 2, sm: 0 },
+                        }
+                      }}
+                    >
+                      <Button
+                        onClick={calculateEstimate}
+                        disabled={Object.keys(errors).length > 0}
+                        startIcon={<CalculateIcon />}
+                        sx={{
+                          background: 'linear-gradient(135deg, #FF6B00 0%, #FF8533 100%)',
+                          flex: 2,
+                          '&:hover': {
+                            background: 'linear-gradient(135deg, #E55A00 0%, #FF6B00 100%)',
+                            transform: 'translateY(-2px)',
+                            boxShadow: '0px 12px 35px rgba(255, 107, 0, 0.4)',
+                            zIndex: 1
+                          },
+                          '&:disabled': {
+                            background: 'linear-gradient(135deg, #BDBDBD 0%, #9E9E9E 100%)',
+                            color: 'white',
+                            opacity: 0.6
+                          }
+                        }}
+                      >
+                        Calculer l'estimation
+                      </Button>
+                      
+                      <Button
+                        onClick={resetForm}
+                        startIcon={<RefreshIcon />}
+                        sx={{
+                          background: 'linear-gradient(135deg, #6C757D 0%, #495057 100%)',
+                          flex: 1,
+                          '&:hover': {
+                            background: 'linear-gradient(135deg, #5A6268 0%, #343A40 100%)',
+                            transform: 'translateY(-2px)',
+                            boxShadow: '0px 12px 35px rgba(108, 117, 125, 0.4)',
+                            zIndex: 1
+                          }
+                        }}
+                      >
+                        Reset
+                      </Button>
+                    </ButtonGroup>
+
+                    {/* Indicateur de progression */}
+                    {Object.keys(errors).length === 0 && formData.selectedMaterials.length > 0 && (
+                      <Slide in direction="up" timeout={400}>
+                        <Box sx={{ mt: 2, textAlign: 'center' }}>
+                          <Chip
+                            icon={<CheckCircleIcon />}
+                            label="Prêt pour le calcul"
+                            color="success"
+                            variant="filled"
+                            sx={{
+                              fontWeight: 600,
+                              animation: 'pulse 2s infinite',
+                              '@keyframes pulse': {
+                                '0%': { transform: 'scale(1)' },
+                                '50%': { transform: 'scale(1.05)' },
+                                '100%': { transform: 'scale(1)' }
+                              }
+                            }}
+                          />
+                        </Box>
+                      </Slide>
+                    )}
+
+                    {/* Indicateur d'erreurs */}
+                    {Object.keys(errors).length > 0 && (
+                      <Slide in direction="up" timeout={400}>
+                        <Box sx={{ mt: 2, textAlign: 'center' }}>
+                          <Chip
+                            icon={<WarningIcon />}
+                            label={`${Object.keys(errors).length} erreur(s) à corriger`}
+                            color="error"
+                            variant="filled"
+                            sx={{
+                              fontWeight: 600,
+                              animation: 'shake 0.5s ease-in-out',
+                              '@keyframes shake': {
+                                '0%, 100%': { transform: 'translateX(0)' },
+                                '25%': { transform: 'translateX(-5px)' },
+                                '75%': { transform: 'translateX(5px)' }
+                              }
+                            }}
+                          />
+                        </Box>
+                      </Slide>
+                    )}
+                  </Box>
+                </Collapse>
               </CardContent>
             </Card>
           </Zoom>

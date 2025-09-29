@@ -17,12 +17,19 @@ import {
   Container,
   Fade,
   Zoom,
+  Slide,
+  Collapse,
+  Avatar,
+  Skeleton,
 } from '@mui/material';
 import {
   Search as SearchIcon,
   ShoppingCart as ShoppingCartIcon,
   FilterList as FilterIcon,
   Visibility as VisibilityIcon,
+  Store as StoreIcon,
+  LocalOffer as LocalOfferIcon,
+  TrendingUp as TrendingUpIcon,
 } from '@mui/icons-material';
 import ProductImage from './common/ProductImage';
 
@@ -242,6 +249,8 @@ const categoryColors = {
   'Sur commande': '#E55A00', // Changé de #073B4C (bleu foncé) vers orange foncé
 };
 
+// Extraction des catégories uniques (already declared above)
+
 function CatalogModule() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Tous');
@@ -276,76 +285,195 @@ function CatalogModule() {
   return (
     <Box sx={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)' }}>
       <Container maxWidth="xl" sx={{ py: 6 }}>
-        {/* Hero Section */}
+        {/* Enhanced Hero Section */}
         <Box sx={{ textAlign: 'center', mb: 8 }}>
-          <Typography 
-            variant="h2" 
-            sx={{ 
-              fontWeight: 800, 
-              background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              mb: 2,
-              fontSize: { xs: '2.5rem', md: '3.5rem' }
-            }}
-          >
-            Catalogue Premium
-          </Typography>
-          <Typography 
-            variant="h5" 
-            sx={{ 
-              color: 'text.secondary', 
-              fontWeight: 300,
-              maxWidth: '600px',
-              mx: 'auto',
-              mb: 4
-            }}
-          >
-            Découvrez notre sélection de matériaux de construction de haute qualité
-          </Typography>
-          
-          {/* Cart Badge with Premium Styling */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-            <Badge 
-              badgeContent={getCartItemCount()} 
-              color="primary"
-              sx={{
-                '& .MuiBadge-badge': {
+          <Fade in timeout={800}>
+            <Box>
+              <Avatar 
+                sx={{ 
+                  width: 100, 
+                  height: 100, 
+                  mx: 'auto', 
+                  mb: 4,
                   background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
-                  color: 'white',
-                  fontWeight: 600,
-                  fontSize: '0.75rem',
-                  minWidth: '24px',
-                  height: '24px'
-                }
-              }}
-            >
-              <Button
-                variant="contained"
-                size="large"
-                startIcon={<ShoppingCartIcon />}
-                onClick={() => alert('Panier : ' + cart.length + ' produits')}
-                sx={{
-                  background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
-                  borderRadius: '50px',
-                  px: 4,
-                  py: 1.5,
-                  fontSize: '1rem',
-                  fontWeight: 600,
-                  textTransform: 'none',
-                  boxShadow: '0 8px 32px rgba(255, 107, 53, 0.3)',
-                  '&:hover': {
-                    background: 'linear-gradient(135deg, #E55A2B 0%, #E8851A 100%)',
-                    transform: 'translateY(-2px)',
-                    boxShadow: '0 12px 40px rgba(255, 107, 53, 0.4)',
+                  boxShadow: '0px 12px 40px rgba(255, 107, 53, 0.3)',
+                  animation: 'float 3s ease-in-out infinite',
+                  '@keyframes float': {
+                    '0%, 100%': { transform: 'translateY(0px)' },
+                    '50%': { transform: 'translateY(-10px)' }
                   }
                 }}
               >
-                Mon Panier
-              </Button>
-            </Badge>
-          </Box>
+                <StoreIcon sx={{ fontSize: 50, color: 'white' }} />
+              </Avatar>
+              
+              <Typography 
+                variant="h2" 
+                sx={{ 
+                  fontWeight: 800, 
+                  background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  mb: 2,
+                  fontSize: { xs: '2.5rem', md: '3.5rem' }
+                }}
+              >
+                Catalogue Premium
+              </Typography>
+              
+              <Typography 
+                variant="h5" 
+                sx={{ 
+                  color: 'text.secondary', 
+                  fontWeight: 300,
+                  maxWidth: '600px',
+                  mx: 'auto',
+                  mb: 4,
+                  lineHeight: 1.6
+                }}
+              >
+                Découvrez notre sélection de matériaux de construction de haute qualité
+              </Typography>
+
+              {/* Statistics Cards */}
+              <Slide in direction="up" timeout={600}>
+                <Grid container spacing={3} sx={{ maxWidth: 800, mx: 'auto', mb: 6 }}>
+                  <Grid item xs={12} sm={4}>
+                    <Card sx={{ 
+                      p: 3, 
+                      borderRadius: 3,
+                      background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(247, 147, 30, 0.1) 100%)',
+                      border: '1px solid rgba(255, 107, 53, 0.2)',
+                      transition: 'transform 0.3s ease',
+                      '&:hover': { transform: 'translateY(-5px)' }
+                    }}>
+                      <Avatar sx={{ 
+                        width: 50, 
+                        height: 50, 
+                        mx: 'auto', 
+                        mb: 2,
+                        background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)'
+                      }}>
+                        <LocalOfferIcon sx={{ color: 'white' }} />
+                      </Avatar>
+                      <Typography variant="h4" sx={{ fontWeight: 700, color: '#FF6B35', mb: 1 }}>
+                        {products.length}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Produits disponibles
+                      </Typography>
+                    </Card>
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={4}>
+                    <Card sx={{ 
+                      p: 3, 
+                      borderRadius: 3,
+                      background: 'linear-gradient(135deg, rgba(6, 214, 160, 0.1) 0%, rgba(4, 180, 130, 0.1) 100%)',
+                      border: '1px solid rgba(6, 214, 160, 0.2)',
+                      transition: 'transform 0.3s ease',
+                      '&:hover': { transform: 'translateY(-5px)' }
+                    }}>
+                      <Avatar sx={{ 
+                        width: 50, 
+                        height: 50, 
+                        mx: 'auto', 
+                        mb: 2,
+                        background: 'linear-gradient(135deg, #06D6A0 0%, #04B482 100%)'
+                      }}>
+                        <TrendingUpIcon sx={{ color: 'white' }} />
+                      </Avatar>
+                      <Typography variant="h4" sx={{ fontWeight: 700, color: '#06D6A0', mb: 1 }}>
+                        {categories.length - 1}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Catégories
+                      </Typography>
+                    </Card>
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={4}>
+                    <Card sx={{ 
+                      p: 3, 
+                      borderRadius: 3,
+                      background: 'linear-gradient(135deg, rgba(255, 210, 63, 0.1) 0%, rgba(255, 193, 7, 0.1) 100%)',
+                      border: '1px solid rgba(255, 210, 63, 0.2)',
+                      transition: 'transform 0.3s ease',
+                      '&:hover': { transform: 'translateY(-5px)' }
+                    }}>
+                      <Avatar sx={{ 
+                        width: 50, 
+                        height: 50, 
+                        mx: 'auto', 
+                        mb: 2,
+                        background: 'linear-gradient(135deg, #FFD23F 0%, #FFC107 100%)'
+                      }}>
+                        <ShoppingCartIcon sx={{ color: 'white' }} />
+                      </Avatar>
+                      <Typography variant="h4" sx={{ fontWeight: 700, color: '#FFD23F', mb: 1 }}>
+                        {getCartItemCount()}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Articles au panier
+                      </Typography>
+                    </Card>
+                  </Grid>
+                </Grid>
+              </Slide>
+              
+              {/* Cart Button with Enhanced Styling */}
+              <Zoom in timeout={800}>
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Badge 
+                    badgeContent={getCartItemCount()} 
+                    color="primary"
+                    sx={{
+                      '& .MuiBadge-badge': {
+                        background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
+                        color: 'white',
+                        fontWeight: 600,
+                        fontSize: '0.75rem',
+                        minWidth: '24px',
+                        height: '24px',
+                        animation: getCartItemCount() > 0 ? 'bounce 0.6s ease' : 'none',
+                        '@keyframes bounce': {
+                          '0%, 20%, 50%, 80%, 100%': { transform: 'translateY(0)' },
+                          '40%': { transform: 'translateY(-10px)' },
+                          '60%': { transform: 'translateY(-5px)' }
+                        }
+                      }
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      size="large"
+                      startIcon={<ShoppingCartIcon />}
+                      onClick={() => alert('Panier : ' + cart.length + ' produits')}
+                      sx={{
+                        background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
+                        borderRadius: '50px',
+                        px: 4,
+                        py: 1.5,
+                        fontSize: '1rem',
+                        fontWeight: 600,
+                        textTransform: 'none',
+                        boxShadow: '0 8px 32px rgba(255, 107, 53, 0.3)',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        '&:hover': {
+                          background: 'linear-gradient(135deg, #E55A2B 0%, #E8851A 100%)',
+                          transform: 'translateY(-3px) scale(1.05)',
+                          boxShadow: '0 15px 50px rgba(255, 107, 53, 0.4)',
+                        }
+                      }}
+                    >
+                      Mon Panier
+                    </Button>
+                  </Badge>
+                </Box>
+              </Zoom>
+            </Box>
+          </Fade>
         </Box>
 
         {/* Enhanced Search and Filter Card */}

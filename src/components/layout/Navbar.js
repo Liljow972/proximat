@@ -81,7 +81,7 @@ function Navbar() {
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
         <ConstructionIcon sx={{ mr: 1, color: 'primary.main' }} />
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
-          PROXIMAT
+          PROXIMAT 224
         </Typography>
       </Box>
       <List>
@@ -136,7 +136,7 @@ function Navbar() {
                     letterSpacing: '.1rem',
                   }}
                 >
-                  PROXIMAT
+                  PROXIMAT 224
                 </Typography>
               </Box>
 
@@ -178,7 +178,7 @@ function Navbar() {
                     textDecoration: 'none',
                   }}
                 >
-                  PROXIMAT
+                  PROXIMAT 224
                 </Typography>
               </Box>
 
